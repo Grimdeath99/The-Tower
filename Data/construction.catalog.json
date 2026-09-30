@@ -1,0 +1,579 @@
+{
+    "schemaVersion":  1,
+    "currencyCode":  "USD",
+    "minorUnitsPerMajor":  100,
+    "floorConstructionCostMinor":  500000,
+    "ranks":  [
+                  {
+                      "rank":  1,
+                      "name":  "Local Foundation",
+                      "aboveGroundFloorCap":  20,
+                      "provenance":  "Original draft name; Phase 1 capacity from master prompt. Mixed promotion thresholds are provisional in simulation.rules.json."
+                  },
+                  {
+                      "rank":  2,
+                      "name":  "Growing Address",
+                      "aboveGroundFloorCap":  40,
+                      "provenance":  "Original provisional tuning and draft name. Mixed promotion thresholds are provisional in simulation.rules.json."
+                  },
+                  {
+                      "rank":  3,
+                      "name":  "City Landmark",
+                      "aboveGroundFloorCap":  80,
+                      "provenance":  "Original provisional tuning and draft name. Mixed promotion thresholds are provisional in simulation.rules.json."
+                  },
+                  {
+                      "rank":  4,
+                      "name":  "Metropolitan Anchor",
+                      "aboveGroundFloorCap":  150,
+                      "provenance":  "Original provisional tuning and draft name. Mixed promotion thresholds are provisional in simulation.rules.json."
+                  },
+                  {
+                      "rank":  5,
+                      "name":  "Skyline Destination",
+                      "aboveGroundFloorCap":  250,
+                      "provenance":  "Original draft name; full height unlock confirmed by master prompt. Mixed promotion thresholds are provisional in simulation.rules.json."
+                  },
+                  {
+                      "rank":  6,
+                      "name":  "Global Icon",
+                      "aboveGroundFloorCap":  250,
+                      "provenance":  "Draft name from master prompt; worldwide recognition theme. Mixed promotion thresholds are provisional in simulation.rules.json."
+                  },
+                  {
+                      "rank":  7,
+                      "name":  "Seven-Star Destination",
+                      "aboveGroundFloorCap":  250,
+                      "provenance":  "Draft name from master prompt; seven-star hotel experience theme. Mixed promotion thresholds are provisional in simulation.rules.json."
+                  }
+              ],
+    "facilities":  [
+                       {
+                           "id":  "lobby",
+                           "name":  "Entrance Lobby",
+                           "category":  "Circulation",
+                           "width":  6,
+                           "height":  1,
+                           "costMinor":  1200000,
+                           "minimumRank":  1,
+                           "colorHex":  "#D6B86B",
+                           "description":  "Original Entrance Lobby. Uses the Public operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Public",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  1500,
+                                              "capacity":  0,
+                                              "staffRequired":  0,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "0:00-24:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative shell; reference-game catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn placeholder; production pixel art pending"
+                                          }
+                       },
+                       {
+                           "id":  "office",
+                           "name":  "Office",
+                           "category":  "Workplaces",
+                           "width":  5,
+                           "height":  1,
+                           "costMinor":  2200000,
+                           "minimumRank":  1,
+                           "colorHex":  "#75A6B5",
+                           "description":  "Original Office. Uses the Office operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Office",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  4000,
+                                              "capacity":  8,
+                                              "staffRequired":  0,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "8:00-18:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative shell; reference-game catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn placeholder; production pixel art pending"
+                                          }
+                       },
+                       {
+                           "id":  "studio",
+                           "name":  "Studio Apartment",
+                           "category":  "Homes",
+                           "width":  4,
+                           "height":  1,
+                           "costMinor":  1600000,
+                           "minimumRank":  1,
+                           "colorHex":  "#B39AC8",
+                           "description":  "Original Studio Apartment. Uses the Home operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Home",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  3000,
+                                              "capacity":  2,
+                                              "staffRequired":  0,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "0:00-24:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative shell; reference-game catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn placeholder; production pixel art pending"
+                                          }
+                       },
+                       {
+                           "id":  "cafe",
+                           "name":  "Corner Cafe",
+                           "category":  "Food",
+                           "width":  4,
+                           "height":  1,
+                           "costMinor":  1800000,
+                           "minimumRank":  1,
+                           "colorHex":  "#CB926E",
+                           "description":  "Original Corner Cafe. Uses the Food operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Food",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  2500,
+                                              "capacity":  8,
+                                              "staffRequired":  2,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "8:00-22:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative shell; reference-game catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn placeholder; production pixel art pending"
+                                          }
+                       },
+                       {
+                           "id":  "hotel-room",
+                           "name":  "Hotel Room",
+                           "category":  "Hospitality",
+                           "width":  3,
+                           "height":  1,
+                           "costMinor":  2000000,
+                           "minimumRank":  1,
+                           "colorHex":  "#839ABB",
+                           "description":  "Original Hotel Room. Uses the Hotel operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Hotel",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  3500,
+                                              "capacity":  1,
+                                              "staffRequired":  0,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "14:00-23:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative shell; reference-game catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn placeholder; production pixel art pending"
+                                          }
+                       },
+                       {
+                           "id":  "service-room",
+                           "name":  "Service Room",
+                           "category":  "Services",
+                           "width":  3,
+                           "height":  1,
+                           "costMinor":  1000000,
+                           "minimumRank":  1,
+                           "colorHex":  "#84A895",
+                           "description":  "Original Service Room. Uses the Service operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Service",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  1500,
+                                              "capacity":  2,
+                                              "staffRequired":  2,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "0:00-24:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative shell; reference-game catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn placeholder; production pixel art pending"
+                                          }
+                       },
+                       {
+                           "id":  "atrium",
+                           "name":  "Double-height Atrium",
+                           "category":  "Circulation",
+                           "width":  6,
+                           "height":  2,
+                           "costMinor":  3000000,
+                           "minimumRank":  1,
+                           "colorHex":  "#83B5AD",
+                           "description":  "Original Double-height Atrium. Uses the Public operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Public",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  1000,
+                                              "capacity":  0,
+                                              "staffRequired":  0,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "0:00-24:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District addition; not a claim about reference-game content",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn placeholder; production pixel art pending"
+                                          }
+                       },
+                       {
+                           "id":  "shop",
+                           "name":  "Corner Shop",
+                           "category":  "Shopping",
+                           "width":  4,
+                           "height":  1,
+                           "costMinor":  1700000,
+                           "minimumRank":  1,
+                           "colorHex":  "#81B7AA",
+                           "description":  "Original Corner Shop. Uses the Shop operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Shop",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  2000,
+                                              "capacity":  6,
+                                              "staffRequired":  1,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "10:00-22:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative content; reference catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn art; production art pending"
+                                          }
+                       },
+                       {
+                           "id":  "cinema",
+                           "name":  "Screening Room",
+                           "category":  "Entertainment",
+                           "width":  8,
+                           "height":  1,
+                           "costMinor":  5000000,
+                           "minimumRank":  1,
+                           "colorHex":  "#A889BC",
+                           "description":  "Original Screening Room. Uses the Cinema operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Cinema",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  3500,
+                                              "capacity":  16,
+                                              "staffRequired":  2,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "12:00-24:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative content; reference catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn art; production art pending"
+                                          }
+                       },
+                       {
+                           "id":  "event-hall",
+                           "name":  "Event Hall",
+                           "category":  "Events",
+                           "width":  8,
+                           "height":  1,
+                           "costMinor":  6500000,
+                           "minimumRank":  1,
+                           "colorHex":  "#B79374",
+                           "description":  "Original Event Hall. Uses the Event operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Event",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  5000,
+                                              "capacity":  24,
+                                              "staffRequired":  2,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "8:00-24:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative content; reference catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn art; production art pending"
+                                          }
+                       },
+                       {
+                           "id":  "condo",
+                           "name":  "Condominium",
+                           "category":  "Homes",
+                           "width":  5,
+                           "height":  1,
+                           "costMinor":  4000000,
+                           "minimumRank":  1,
+                           "colorHex":  "#B8A6C8",
+                           "description":  "Original Condominium. Uses the Condo operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Condo",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  2000,
+                                              "capacity":  2,
+                                              "staffRequired":  0,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "0:00-24:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative content; reference catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn art; production art pending"
+                                          }
+                       },
+                       {
+                           "id":  "billboard",
+                           "name":  "Billboard Studio",
+                           "category":  "Advertising",
+                           "width":  3,
+                           "height":  1,
+                           "costMinor":  2500000,
+                           "minimumRank":  1,
+                           "colorHex":  "#DFB96C",
+                           "description":  "Original Billboard Studio. Uses the Advertising operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Advertising",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  1000,
+                                              "capacity":  0,
+                                              "staffRequired":  0,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "0:00-24:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative content; reference catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn art; production art pending"
+                                          }
+                       },
+                       {
+                           "id":  "parking",
+                           "name":  "Parking Garage",
+                           "category":  "Parking",
+                           "width":  8,
+                           "height":  1,
+                           "costMinor":  5000000,
+                           "minimumRank":  1,
+                           "colorHex":  "#84939F",
+                           "description":  "Original Parking Garage. Uses the Parking operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Parking",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  2500,
+                                              "capacity":  12,
+                                              "staffRequired":  1,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "6:00-24:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative content; reference catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn art; production art pending"
+                                          }
+                       },
+                       {
+                           "id":  "utility-room",
+                           "name":  "Utility Plant",
+                           "category":  "Utilities",
+                           "width":  4,
+                           "height":  1,
+                           "costMinor":  2500000,
+                           "minimumRank":  1,
+                           "colorHex":  "#759AA2",
+                           "description":  "Original Utility Plant. Uses the Utility operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Utility",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  6500,
+                                              "capacity":  40,
+                                              "staffRequired":  1,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "0:00-24:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative content; reference catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn art; production art pending"
+                                          }
+                       },
+                       {
+                           "id":  "security-room",
+                           "name":  "Security Office",
+                           "category":  "Services",
+                           "width":  3,
+                           "height":  1,
+                           "costMinor":  1800000,
+                           "minimumRank":  1,
+                           "colorHex":  "#7894B5",
+                           "description":  "Original Security Office. Uses the Security operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Security",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  2000,
+                                              "capacity":  40,
+                                              "staffRequired":  1,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "0:00-24:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative content; reference catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn art; production art pending"
+                                          }
+                       },
+                       {
+                           "id":  "subway",
+                           "name":  "Subway Concourse",
+                           "category":  "Arrivals",
+                           "width":  8,
+                           "height":  1,
+                           "costMinor":  15000000,
+                           "minimumRank":  1,
+                           "colorHex":  "#779BB3",
+                           "description":  "Original Subway Concourse. Uses the Terminal operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Terminal",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  8500,
+                                              "capacity":  20,
+                                              "staffRequired":  2,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "6:00-24:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative content; reference catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn art; production art pending"
+                                          }
+                       },
+                       {
+                           "id":  "dock",
+                           "name":  "Boat Terminal",
+                           "category":  "Arrivals",
+                           "width":  8,
+                           "height":  1,
+                           "costMinor":  12000000,
+                           "minimumRank":  1,
+                           "colorHex":  "#68ABAC",
+                           "description":  "Original Boat Terminal. Uses the Terminal operating model; inspect for staffing, condition, access, and prices.",
+                           "operations":  {
+                                              "model":  "Terminal",
+                                              "status":  "Prototype",
+                                              "dailyUpkeepMinor":  6000,
+                                              "capacity":  12,
+                                              "staffRequired":  2,
+                                              "utilities":  [
+                                                                "Power",
+                                                                "Water"
+                                                            ],
+                                              "openingHours":  "8:00-20:00",
+                                              "accessRule":  "Physical route from a ground lobby; services route from staffed depots",
+                                              "noise":  10,
+                                              "pricingNotes":  "Provisional operating tuning is in simulation.rules.json. Structural and operational completeness are tracked separately."
+                                          },
+                           "provenance":  {
+                                              "source":  "Original Vertical District representative content; reference catalogue unverified",
+                                              "tuningStatus":  "Original provisional tuning; see simulation.rules.json",
+                                              "visualStatus":  "Original temporary code-drawn art; production art pending"
+                                          }
+                       }
+                   ]
+}

@@ -1,0 +1,626 @@
+{
+  "schemaVersion": 1,
+  "snapshotDate": "2026-09-30",
+  "subwayMinimumRank": 1,
+  "dockMinimumRank": 4,
+  "rankGateProvenance": "Draft gameplay gates: dock rank 4 from the master prompt; subway rank 1 adds no extra geography rank requirement. Facility unlocks may impose a higher rank independently. GDD approval pending.",
+  "locations": [
+    {
+      "id": "tokyo",
+      "name": "Tokyo",
+      "geographicScope": "Tokyo, Japan",
+      "subwayNetwork": "Eligible",
+      "networkNotes": "Tokyo Metro is an operating subway. Eligibility does not imply that every fictional parcel has a station connection.",
+      "sites": [
+        {
+          "id": "central",
+          "name": "Fictional central plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "transit",
+          "name": "Fictional transit plot",
+          "subwayConnection": true,
+          "waterfront": false
+        },
+        {
+          "id": "waterfront",
+          "name": "Fictional waterfront plot",
+          "subwayConnection": false,
+          "waterfront": true
+        }
+      ],
+      "demand": {
+        "residential": 1,
+        "office": 1,
+        "retail": 1,
+        "hotel": 1,
+        "status": "ProvisionalNeutral"
+      },
+      "sources": [
+        {
+          "publisher": "Tokyo Metro",
+          "title": "Route and station information",
+          "url": "https://www.tokyometro.jp/lang_en/station/index.html",
+          "checkedOn": "2026-09-30",
+          "evidence": "Operator publishes the operating subway map, line information, stations, and transfer search."
+        }
+      ]
+    },
+    {
+      "id": "osaka",
+      "name": "Osaka",
+      "geographicScope": "Osaka, Japan",
+      "subwayNetwork": "Eligible",
+      "networkNotes": "Osaka Metro subway lines qualify; New Tram alone would not establish subway eligibility.",
+      "sites": [
+        {
+          "id": "central",
+          "name": "Fictional central plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "transit",
+          "name": "Fictional transit plot",
+          "subwayConnection": true,
+          "waterfront": false
+        },
+        {
+          "id": "waterfront",
+          "name": "Fictional waterfront plot",
+          "subwayConnection": false,
+          "waterfront": true
+        }
+      ],
+      "demand": {
+        "residential": 1,
+        "office": 1,
+        "retail": 1,
+        "hotel": 1,
+        "status": "ProvisionalNeutral"
+      },
+      "sources": [
+        {
+          "publisher": "Osaka Metro",
+          "title": "Subway route map",
+          "url": "https://subway-tr.osakametro.co.jp/en/guide/routemap.php",
+          "checkedOn": "2026-09-30",
+          "evidence": "Operator identifies the map and current service status as subway service."
+        }
+      ]
+    },
+    {
+      "id": "seoul",
+      "name": "Seoul",
+      "geographicScope": "Seoul, Republic of Korea",
+      "subwayNetwork": "Eligible",
+      "networkNotes": "Operating metropolitan subway qualifies. City transport authority corroboration used because the operator English page could not be fetched.",
+      "sites": [
+        {
+          "id": "central",
+          "name": "Fictional central plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "transit",
+          "name": "Fictional transit plot",
+          "subwayConnection": true,
+          "waterfront": false
+        },
+        {
+          "id": "waterfront",
+          "name": "Fictional waterfront plot",
+          "subwayConnection": false,
+          "waterfront": true
+        }
+      ],
+      "demand": {
+        "residential": 1,
+        "office": 1,
+        "retail": 1,
+        "hotel": 1,
+        "status": "ProvisionalNeutral"
+      },
+      "sources": [
+        {
+          "publisher": "Seoul Transport Operation and Information Service",
+          "title": "Seoul subway information",
+          "url": "https://topis.seoul.go.kr/eng/page/transInfo_1_2.jsp",
+          "checkedOn": "2026-09-30",
+          "evidence": "City transport service describes operating subway lines and station guidance."
+        },
+        {
+          "publisher": "Seoul Metropolitan Government",
+          "title": "Public transportation",
+          "url": "https://english.seoul.go.kr/service/movement/public-transportation/",
+          "checkedOn": "2026-09-30",
+          "evidence": "Current official passenger guide explains use of subway stations, tickets and Seoul Subway application."
+        }
+      ]
+    },
+    {
+      "id": "dubai",
+      "name": "Dubai",
+      "geographicScope": "Dubai, United Arab Emirates",
+      "subwayNetwork": "Eligible",
+      "networkNotes": "Red and Green lines qualify through operating underground infrastructure. Planned Blue Line infrastructure is not the basis for eligibility.",
+      "sites": [
+        {
+          "id": "central",
+          "name": "Fictional central plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "transit",
+          "name": "Fictional transit plot",
+          "subwayConnection": true,
+          "waterfront": false
+        },
+        {
+          "id": "waterfront",
+          "name": "Fictional waterfront plot",
+          "subwayConnection": false,
+          "waterfront": true
+        }
+      ],
+      "demand": {
+        "residential": 1,
+        "office": 1,
+        "retail": 1,
+        "hotel": 1,
+        "status": "ProvisionalNeutral"
+      },
+      "sources": [
+        {
+          "publisher": "Roads and Transport Authority",
+          "title": "Metro and tram stations map",
+          "url": "https://www.rta.ae/wps/portal/rta/ae/public-transport/metro-stations-map",
+          "checkedOn": "2026-09-30",
+          "evidence": "Operating Red and Green metro routes include Union and BurJuman."
+        },
+        {
+          "publisher": "Roads and Transport Authority",
+          "title": "Masar magazine, issue 1",
+          "url": "https://rta.ae/wpsv5/links/magazine/masar/RTAmag_I_e.pdf",
+          "checkedOn": "2026-09-30",
+          "evidence": "Historical infrastructure description identifies Union Square as an underground transfer station; paired with current operating route evidence."
+        }
+      ]
+    },
+    {
+      "id": "abu-dhabi",
+      "name": "Abu Dhabi",
+      "geographicScope": "Abu Dhabi, United Arab Emirates",
+      "subwayNetwork": "Unknown",
+      "networkNotes": "No qualifying operating subway was established from the checked official sources. ART is explicitly rail-less buses. Future or planned metro proposals do not qualify; unverified eligibility remains disabled.",
+      "sites": [
+        {
+          "id": "central",
+          "name": "Fictional central plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "transit",
+          "name": "Fictional transit plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "waterfront",
+          "name": "Fictional waterfront plot",
+          "subwayConnection": false,
+          "waterfront": true
+        }
+      ],
+      "demand": {
+        "residential": 1,
+        "office": 1,
+        "retail": 1,
+        "hotel": 1,
+        "status": "ProvisionalNeutral"
+      },
+      "sources": [
+        {
+          "publisher": "Abu Dhabi Mobility",
+          "title": "Automated Rapid Transit project",
+          "url": "https://admobility.gov.ae/en/art-project",
+          "checkedOn": "2026-09-30",
+          "evidence": "Authority describes ART as electric public buses on a rail-less system, not a subway."
+        },
+        {
+          "publisher": "Abu Dhabi Mobility",
+          "title": "Public transport services",
+          "url": "https://admobility.gov.ae/en/automated-rapid-transit",
+          "checkedOn": "2026-09-30",
+          "evidence": "Current authority service listing did not establish an operating underground railway. Absence from this page is not treated as conclusive proof of no network."
+        }
+      ]
+    },
+    {
+      "id": "new-york",
+      "name": "New York",
+      "geographicScope": "New York City, United States",
+      "subwayNetwork": "Eligible",
+      "networkNotes": "Operating New York City Subway qualifies; above-ground sections do not exclude its subway infrastructure.",
+      "sites": [
+        {
+          "id": "central",
+          "name": "Fictional central plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "transit",
+          "name": "Fictional transit plot",
+          "subwayConnection": true,
+          "waterfront": false
+        },
+        {
+          "id": "waterfront",
+          "name": "Fictional waterfront plot",
+          "subwayConnection": false,
+          "waterfront": true
+        }
+      ],
+      "demand": {
+        "residential": 1,
+        "office": 1,
+        "retail": 1,
+        "hotel": 1,
+        "status": "ProvisionalNeutral"
+      },
+      "sources": [
+        {
+          "publisher": "Metropolitan Transportation Authority",
+          "title": "New York City Subway map",
+          "url": "https://www.mta.info/map/5256",
+          "checkedOn": "2026-09-30",
+          "evidence": "MTA publishes the current city subway diagram and service lines."
+        }
+      ]
+    },
+    {
+      "id": "shanghai",
+      "name": "Shanghai",
+      "geographicScope": "Shanghai, China",
+      "subwayNetwork": "Eligible",
+      "networkNotes": "Operating Shanghai Metro underground lines qualify. Official city evidence corroborates the operator; the operator English website timed out.",
+      "sites": [
+        {
+          "id": "central",
+          "name": "Fictional central plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "transit",
+          "name": "Fictional transit plot",
+          "subwayConnection": true,
+          "waterfront": false
+        },
+        {
+          "id": "waterfront",
+          "name": "Fictional waterfront plot",
+          "subwayConnection": false,
+          "waterfront": true
+        }
+      ],
+      "demand": {
+        "residential": 1,
+        "office": 1,
+        "retail": 1,
+        "hotel": 1,
+        "status": "ProvisionalNeutral"
+      },
+      "sources": [
+        {
+          "publisher": "Shanghai Municipal Government",
+          "title": "Shanghai Metro extends reach beyond 900 km",
+          "url": "https://english.shanghai.gov.cn/en-Latest-WhatsNew/20251223/43ad9e0a91d74169a5f13f671c38bdb6.html",
+          "checkedOn": "2026-09-30",
+          "evidence": "Official city report of operating metro extension includes underground stations and distinguishes a station not yet opened."
+        },
+        {
+          "publisher": "Shanghai Municipal Government",
+          "title": "How to take metro in Shanghai",
+          "url": "https://english.shanghai.gov.cn/en-Transportation/20231214/c727f5e15eff4b8c9340651dd95f3f7c.html",
+          "checkedOn": "2026-09-30",
+          "evidence": "Current official passenger guide describes metro ticketing and journeys."
+        }
+      ]
+    },
+    {
+      "id": "hong-kong",
+      "name": "Hong Kong",
+      "geographicScope": "Hong Kong, China",
+      "subwayNetwork": "Eligible",
+      "networkNotes": "MTR's operating subway infrastructure qualifies; this is not a claim that every MTR mode or station is underground.",
+      "sites": [
+        {
+          "id": "central",
+          "name": "Fictional central plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "transit",
+          "name": "Fictional transit plot",
+          "subwayConnection": true,
+          "waterfront": false
+        },
+        {
+          "id": "waterfront",
+          "name": "Fictional waterfront plot",
+          "subwayConnection": false,
+          "waterfront": true
+        }
+      ],
+      "demand": {
+        "residential": 1,
+        "office": 1,
+        "retail": 1,
+        "hotel": 1,
+        "status": "ProvisionalNeutral"
+      },
+      "sources": [
+        {
+          "publisher": "MTR Corporation",
+          "title": "System map and station layouts",
+          "url": "https://www.mtr.com.hk/en/customer/services/system_map.html",
+          "checkedOn": "2026-09-30",
+          "evidence": "Operator lists operating urban lines and their station layouts, including Central, Admiralty and Tsim Sha Tsui."
+        },
+        {
+          "publisher": "MTR Corporation",
+          "title": "Travel tips during typhoons",
+          "url": "https://www.mtr.com.hk/en/customer/main/typhoon_readiness.html",
+          "checkedOn": "2026-09-30",
+          "evidence": "Operator explicitly distinguishes underground railway services from open sections."
+        }
+      ]
+    },
+    {
+      "id": "beijing",
+      "name": "Beijing",
+      "geographicScope": "Beijing, China",
+      "subwayNetwork": "Eligible",
+      "networkNotes": "Operating Beijing Subway qualifies. Fictional site availability remains a separate gate.",
+      "sites": [
+        {
+          "id": "central",
+          "name": "Fictional central plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "transit",
+          "name": "Fictional transit plot",
+          "subwayConnection": true,
+          "waterfront": false
+        }
+      ],
+      "demand": {
+        "residential": 1,
+        "office": 1,
+        "retail": 1,
+        "hotel": 1,
+        "status": "ProvisionalNeutral"
+      },
+      "sources": [
+        {
+          "publisher": "Beijing Subway",
+          "title": "Subway map and first/last trains",
+          "url": "https://www.bjsubway.com/en/index.html",
+          "checkedOn": "2026-09-30",
+          "evidence": "Operator publishes subway map and operating first/last train information."
+        }
+      ]
+    },
+    {
+      "id": "las-vegas",
+      "name": "Las Vegas",
+      "geographicScope": "Las Vegas metropolitan area, Nevada, United States",
+      "subwayNetwork": "Ineligible",
+      "networkNotes": "The checked passenger systems do not qualify: elevated Monorail is not a subway and Vegas Loop moves road vehicles in tunnels, not subway trains.",
+      "sites": [
+        {
+          "id": "central",
+          "name": "Fictional central plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "transit",
+          "name": "Fictional transit plot",
+          "subwayConnection": false,
+          "waterfront": false
+        }
+      ],
+      "demand": {
+        "residential": 1,
+        "office": 1,
+        "retail": 1,
+        "hotel": 1,
+        "status": "ProvisionalNeutral"
+      },
+      "sources": [
+        {
+          "publisher": "Las Vegas Monorail",
+          "title": "Official route map",
+          "url": "https://www.lvmonorail.com/route-map/",
+          "checkedOn": "2026-09-30",
+          "evidence": "Operator describes an elevated monorail route."
+        },
+        {
+          "publisher": "The Boring Company",
+          "title": "Loop",
+          "url": "https://boringcompany.com/loop",
+          "checkedOn": "2026-09-30",
+          "evidence": "Operator describes passengers transported by Tesla vehicles in tunnels. Underground road transport does not establish a subway railway."
+        }
+      ]
+    },
+    {
+      "id": "san-francisco",
+      "name": "San Francisco",
+      "geographicScope": "San Francisco, California, United States",
+      "subwayNetwork": "Eligible",
+      "networkNotes": "BART and Muni have operating underground infrastructure; mixed surface and elevated sections do not disqualify the network.",
+      "sites": [
+        {
+          "id": "central",
+          "name": "Fictional central plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "transit",
+          "name": "Fictional transit plot",
+          "subwayConnection": true,
+          "waterfront": false
+        },
+        {
+          "id": "waterfront",
+          "name": "Fictional waterfront plot",
+          "subwayConnection": false,
+          "waterfront": true
+        }
+      ],
+      "demand": {
+        "residential": 1,
+        "office": 1,
+        "retail": 1,
+        "hotel": 1,
+        "status": "ProvisionalNeutral"
+      },
+      "sources": [
+        {
+          "publisher": "Bay Area Rapid Transit",
+          "title": "BART Wireless Technology Program",
+          "url": "https://www.bart.gov/about/projects/wireless",
+          "checkedOn": "2026-09-30",
+          "evidence": "BART describes completed cellular coverage in SFMTA tunnels and underground stations including Central Subway."
+        },
+        {
+          "publisher": "Bay Area Rapid Transit",
+          "title": "Civic Center / UN Plaza station",
+          "url": "https://www.bart.gov/stations/civc",
+          "checkedOn": "2026-09-30",
+          "evidence": "Operator lists current San Francisco train services and station departures."
+        }
+      ]
+    },
+    {
+      "id": "chicago",
+      "name": "Chicago",
+      "geographicScope": "Chicago, Illinois, United States",
+      "subwayNetwork": "Eligible",
+      "networkNotes": "CTA qualifies through actual Red and Blue Line subway sections even though the network is called the L.",
+      "sites": [
+        {
+          "id": "central",
+          "name": "Fictional central plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "transit",
+          "name": "Fictional transit plot",
+          "subwayConnection": true,
+          "waterfront": false
+        },
+        {
+          "id": "waterfront",
+          "name": "Fictional waterfront plot",
+          "subwayConnection": false,
+          "waterfront": true
+        }
+      ],
+      "demand": {
+        "residential": 1,
+        "office": 1,
+        "retail": 1,
+        "hotel": 1,
+        "status": "ProvisionalNeutral"
+      },
+      "sources": [
+        {
+          "publisher": "Chicago Transit Authority",
+          "title": "L service overview",
+          "url": "https://www.transitchicago.com/assets/1/6/ctamap_LMap.pdf",
+          "checkedOn": "2026-09-30",
+          "evidence": "Operator identifies Red and Blue Line service via downtown subway."
+        },
+        {
+          "publisher": "Chicago Transit Authority",
+          "title": "Lake Red Line station",
+          "url": "https://lapi.transitchicago.com/station/lake/",
+          "checkedOn": "2026-09-30",
+          "evidence": "Operator explicitly categorizes the operating Lake station as Subway and gives service arrivals."
+        }
+      ]
+    },
+    {
+      "id": "hawaii",
+      "name": "Hawaii",
+      "geographicScope": "Honolulu, Oahu, Hawaii, United States (fictional parcels)",
+      "subwayNetwork": "Ineligible",
+      "networkNotes": "Hawaii is the requested menu label; these parcels are in Honolulu on Oahu. Skyline's elevated and short at-grade alignment has no subway infrastructure. Hawaii-only docks are optional on a compatible waterfront parcel.",
+      "sites": [
+        {
+          "id": "central",
+          "name": "Fictional central plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "transit",
+          "name": "Fictional transit plot",
+          "subwayConnection": false,
+          "waterfront": false
+        },
+        {
+          "id": "waterfront",
+          "name": "Fictional waterfront plot",
+          "subwayConnection": false,
+          "waterfront": true
+        }
+      ],
+      "demand": {
+        "residential": 1,
+        "office": 1,
+        "retail": 1,
+        "hotel": 1,
+        "status": "ProvisionalNeutral"
+      },
+      "sources": [
+        {
+          "publisher": "Honolulu Department of Transportation Services",
+          "title": "Skyline",
+          "url": "https://www.honolulu.gov/dts/skyline/",
+          "checkedOn": "2026-09-30",
+          "evidence": "Operating Skyline passenger information and schedules."
+        },
+        {
+          "publisher": "Honolulu Authority for Rapid Transportation",
+          "title": "The project",
+          "url": "https://honolulutransit.org/about/the-project/",
+          "checkedOn": "2026-09-30",
+          "evidence": "Authority describes an elevated alignment except for a short at-grade section; this does not qualify as subway infrastructure."
+        },
+        {
+          "publisher": "Honolulu Authority for Rapid Transportation",
+          "title": "Construction overview",
+          "url": "https://honolulutransit.org/construction/",
+          "checkedOn": "2026-09-30",
+          "evidence": "Authority separates currently operating segments from future construction. Planned service is not counted."
+        }
+      ]
+    }
+  ]
+}

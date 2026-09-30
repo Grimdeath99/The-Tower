@@ -1,3 +1,11 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Local build caches and machine-specific package feed.
+**/bin/
+**/obj/
+.build/
+.nuget/
+NuGet.Config
+artifacts/
