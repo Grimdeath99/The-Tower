@@ -37,6 +37,8 @@ public sealed partial class GameSession
     {
         var result = World.ValidateDemolishRoom(id);
         if (!result.Success) return result;
+        if (OwnershipDemolitionBlocker(id) is { } ownershipBlocker) return new(false, ownershipBlocker);
+        if (BusinessDemolitionBlocker(id) is { } businessBlocker) return new(false, businessBlocker);
         if (_pendingBilling.Any(batch => batch.Obligations.Any(bill => bill.RoomId == id)))
             return new(false, "This room has an unpaid billing obligation. Settle the pending period before demolition.");
         if (_people.Values.Any(p => p.RoomId == id || p.ServiceTargetId == id)) return new(false, "Close this facility and wait for people and service staff to leave before demolition.");
@@ -50,7 +52,14 @@ public sealed partial class GameSession
         var check = ValidateDemolishRoom(id);
         if (!check.Success) return check;
         var result = World.DemolishRoom(id);
-        if (result.Success) _operations.Remove(id);
+        if (result.Success)
+        {
+            CancelRoomServiceTasks(id);
+            RemoveBusinessRoom(id);
+            RemoveOwnershipRoom(id);
+            _operations.Remove(id);
+            SynchronizeSatisfaction();
+        }
         return result;
     }
     public CommandResult ValidateDemolishFloor(int floor)
@@ -65,7 +74,7 @@ public sealed partial class GameSession
     public CommandResult SetPrice(long id, long price)
     {
         if (!_operations.TryGetValue(id, out var op) || price < 0 || price > 100_000_000) return new(false, "Choose a price from $0 to $1,000,000.");
-        SetOp(op with { PriceMinor = price }); return new(true, "Price updated. Existing prepaid stays and ownership contracts keep their agreed price.");
+        SetOp(op with { PriceMinor = price }); return new(true, "Asking price updated. Existing leases, orders, hotel bookings and accepted ownership offers keep their agreed price; new decisions use this price.");
     }
     public CommandResult SetStaff(long id, int staff)
     {
@@ -76,8 +85,11 @@ public sealed partial class GameSession
     public CommandResult SetOpen(long id, bool open)
     {
         if (!_operations.TryGetValue(id, out var op)) return new(false, "Unknown room.");
-        if (!open && op.CondoSold) return new(false, "Owned homes must be bought back before closure.");
+        if (!open && OwnershipFor(id)?.Status == CondoOwnershipStatus.Owned) return new(false, "Owned homes must be bought back before closure.");
+        if (open && (OwnershipFor(id)?.Status == CondoOwnershipStatus.Evacuating || OwnershipAwaitingExit(id)))
+            return new(false, "Wait for the prior household to physically leave before reopening this unit.");
         SetOp(op with { Open = open });
+        if (!open) { CloseBusiness(id); CloseOwnershipOffer(id); CancelDepotServiceTasks(id); }
         if (!open) Notice("Facility closed. Existing occupants will leave by their physical routes; prepaid guests retain their completed stay charge.");
         return new(true, open ? "Facility reopened." : "Facility closed; arrivals stopped and departures requested.");
     }
@@ -99,10 +111,14 @@ public sealed partial class GameSession
     }
     public CommandResult BuyBackCondo(long id)
     {
-        if (!_operations.TryGetValue(id, out var op) || !op.CondoSold) return new(false, "No condominium ownership contract here.");
-        if (World.CashMinor < op.CondoSaleMinor) return new(false, "Insufficient cash to refund the recorded sale price.");
-        if (!Post(id, -op.CondoSaleMinor, "Condo.Buyback", "Returned the recorded condominium purchase price.")) return new(false, "Buyback failed.");
+        if (!_operations.ContainsKey(id) || OwnershipFor(id) is not { Status: CondoOwnershipStatus.Owned } ownership)
+            return new(false, "No completed condominium ownership purchase to buy back here.");
+        if (ownership.AgreedPriceMinor > 0 && World.CashMinor < ownership.AgreedPriceMinor) return new(false, "Insufficient cash to refund the recorded sale price.");
+        if (!Post(id, -ownership.AgreedPriceMinor, "Condo.Buyback", $"Ownership #{ownership.Id}, owner #{ownership.OwnerId}: returned the original paid purchase price.")) return new(false, "Buyback failed.");
+        _ownerships[ownership.Id] = ownership with { Status = CondoOwnershipStatus.Evacuating, ReacquiredAtTick = Tick,
+            BuybackLedgerSequence = World.Ledger[^1].Sequence, EndReason = "Ownership repurchased; assigned residents must physically leave." };
         SetOp(_operations[id] with { CondoSold = false, CondoSaleMinor = 0, ContractActive = false, Open = false });
+        FinishOwnershipDeparture(ownership.Id);
         return new(true, "Ownership repurchased. Residents will depart; then demolition is available.");
     }
     public CommandResult RepairRoom(long id)

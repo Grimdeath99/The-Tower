@@ -1,0 +1,2485 @@
+{
+  "schemaVersion": 4,
+  "rulesFingerprint": "3712C221702F5DF9BA75074090E6813A5BC3E65C0E2EFA9E9FFA2BD451DE2451",
+  "geographyFingerprint": "9C50B6B3D6AE9986ECD5440F714D7E7D12FE2044B47E23A5B9DA093D00AE600C",
+  "world": {
+    "schemaVersion": 2,
+    "contentFingerprint": "332B6128C7B0A4F1A5E76604AA9A15E02226D825AB3E5F628C7B6401A8CA4AAF",
+    "startingCashMinor": 2500000000,
+    "cashMinor": 2496891500,
+    "rank": 7,
+    "nextRoomId": 3,
+    "commandSequence": 96,
+    "topologyVersion": 2,
+    "floors": [
+      0
+    ],
+    "rooms": [
+      {
+        "id": 1,
+        "definitionId": "lobby",
+        "x": 0,
+        "floor": 0
+      },
+      {
+        "id": 2,
+        "definitionId": "condo",
+        "x": 8,
+        "floor": 0
+      }
+    ],
+    "ledger": [
+      {
+        "sequence": 1,
+        "timestampTicks": 0,
+        "category": "Construction.Room",
+        "entityId": 1,
+        "floor": 0,
+        "amountMinor": -1200000,
+        "balanceAfterMinor": 2498800000,
+        "description": "Built Entrance Lobby #1."
+      },
+      {
+        "sequence": 2,
+        "timestampTicks": 0,
+        "category": "Construction.Room",
+        "entityId": 2,
+        "floor": 0,
+        "amountMinor": -4000000,
+        "balanceAfterMinor": 2494800000,
+        "description": "Built Condominium #2."
+      },
+      {
+        "sequence": 3,
+        "timestampTicks": 36308,
+        "category": "Sales.Condo",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": 2200000,
+        "balanceAfterMinor": 2497000000,
+        "description": "Owner #1: Condo admission/check-in."
+      },
+      {
+        "sequence": 4,
+        "timestampTicks": 57900,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496998500,
+        "description": "Day 1: facility utilities and upkeep."
+      },
+      {
+        "sequence": 5,
+        "timestampTicks": 57900,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496996500,
+        "description": "Day 1: facility utilities and upkeep."
+      },
+      {
+        "sequence": 6,
+        "timestampTicks": 57900,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496996500,
+        "description": "Day 1: recurring billing settled."
+      },
+      {
+        "sequence": 7,
+        "timestampTicks": 144300,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496995000,
+        "description": "Day 2: facility utilities and upkeep."
+      },
+      {
+        "sequence": 8,
+        "timestampTicks": 144300,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496993000,
+        "description": "Day 2: facility utilities and upkeep."
+      },
+      {
+        "sequence": 9,
+        "timestampTicks": 144300,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496993000,
+        "description": "Day 2: recurring billing settled."
+      },
+      {
+        "sequence": 10,
+        "timestampTicks": 230700,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496991500,
+        "description": "Day 3: facility utilities and upkeep."
+      },
+      {
+        "sequence": 11,
+        "timestampTicks": 230700,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496989500,
+        "description": "Day 3: facility utilities and upkeep."
+      },
+      {
+        "sequence": 12,
+        "timestampTicks": 230700,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496989500,
+        "description": "Day 3: recurring billing settled."
+      },
+      {
+        "sequence": 13,
+        "timestampTicks": 317100,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496988000,
+        "description": "Day 4: facility utilities and upkeep."
+      },
+      {
+        "sequence": 14,
+        "timestampTicks": 317100,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496986000,
+        "description": "Day 4: facility utilities and upkeep."
+      },
+      {
+        "sequence": 15,
+        "timestampTicks": 317100,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496986000,
+        "description": "Day 4: recurring billing settled."
+      },
+      {
+        "sequence": 16,
+        "timestampTicks": 403500,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496984500,
+        "description": "Day 5: facility utilities and upkeep."
+      },
+      {
+        "sequence": 17,
+        "timestampTicks": 403500,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496982500,
+        "description": "Day 5: facility utilities and upkeep."
+      },
+      {
+        "sequence": 18,
+        "timestampTicks": 403500,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496982500,
+        "description": "Day 5: recurring billing settled."
+      },
+      {
+        "sequence": 19,
+        "timestampTicks": 489900,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496981000,
+        "description": "Day 6: facility utilities and upkeep."
+      },
+      {
+        "sequence": 20,
+        "timestampTicks": 489900,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496979000,
+        "description": "Day 6: facility utilities and upkeep."
+      },
+      {
+        "sequence": 21,
+        "timestampTicks": 489900,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496979000,
+        "description": "Day 6: recurring billing settled."
+      },
+      {
+        "sequence": 22,
+        "timestampTicks": 576300,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496977500,
+        "description": "Day 7: facility utilities and upkeep."
+      },
+      {
+        "sequence": 23,
+        "timestampTicks": 576300,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496975500,
+        "description": "Day 7: facility utilities and upkeep."
+      },
+      {
+        "sequence": 24,
+        "timestampTicks": 576300,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496975500,
+        "description": "Day 7: recurring billing settled."
+      },
+      {
+        "sequence": 25,
+        "timestampTicks": 662700,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496974000,
+        "description": "Day 8: facility utilities and upkeep."
+      },
+      {
+        "sequence": 26,
+        "timestampTicks": 662700,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496972000,
+        "description": "Day 8: facility utilities and upkeep."
+      },
+      {
+        "sequence": 27,
+        "timestampTicks": 662700,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496972000,
+        "description": "Day 8: recurring billing settled."
+      },
+      {
+        "sequence": 28,
+        "timestampTicks": 749100,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496970500,
+        "description": "Day 9: facility utilities and upkeep."
+      },
+      {
+        "sequence": 29,
+        "timestampTicks": 749100,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496968500,
+        "description": "Day 9: facility utilities and upkeep."
+      },
+      {
+        "sequence": 30,
+        "timestampTicks": 749100,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496968500,
+        "description": "Day 9: recurring billing settled."
+      },
+      {
+        "sequence": 31,
+        "timestampTicks": 835500,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496967000,
+        "description": "Day 10: facility utilities and upkeep."
+      },
+      {
+        "sequence": 32,
+        "timestampTicks": 835500,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496965000,
+        "description": "Day 10: facility utilities and upkeep."
+      },
+      {
+        "sequence": 33,
+        "timestampTicks": 835500,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496965000,
+        "description": "Day 10: recurring billing settled."
+      },
+      {
+        "sequence": 34,
+        "timestampTicks": 921900,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496963500,
+        "description": "Day 11: facility utilities and upkeep."
+      },
+      {
+        "sequence": 35,
+        "timestampTicks": 921900,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496961500,
+        "description": "Day 11: facility utilities and upkeep."
+      },
+      {
+        "sequence": 36,
+        "timestampTicks": 921900,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496961500,
+        "description": "Day 11: recurring billing settled."
+      },
+      {
+        "sequence": 37,
+        "timestampTicks": 1008300,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496960000,
+        "description": "Day 12: facility utilities and upkeep."
+      },
+      {
+        "sequence": 38,
+        "timestampTicks": 1008300,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496958000,
+        "description": "Day 12: facility utilities and upkeep."
+      },
+      {
+        "sequence": 39,
+        "timestampTicks": 1008300,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496958000,
+        "description": "Day 12: recurring billing settled."
+      },
+      {
+        "sequence": 40,
+        "timestampTicks": 1094700,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496956500,
+        "description": "Day 13: facility utilities and upkeep."
+      },
+      {
+        "sequence": 41,
+        "timestampTicks": 1094700,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496954500,
+        "description": "Day 13: facility utilities and upkeep."
+      },
+      {
+        "sequence": 42,
+        "timestampTicks": 1094700,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496954500,
+        "description": "Day 13: recurring billing settled."
+      },
+      {
+        "sequence": 43,
+        "timestampTicks": 1181100,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496953000,
+        "description": "Day 14: facility utilities and upkeep."
+      },
+      {
+        "sequence": 44,
+        "timestampTicks": 1181100,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496951000,
+        "description": "Day 14: facility utilities and upkeep."
+      },
+      {
+        "sequence": 45,
+        "timestampTicks": 1181100,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496951000,
+        "description": "Day 14: recurring billing settled."
+      },
+      {
+        "sequence": 46,
+        "timestampTicks": 1267500,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496949500,
+        "description": "Day 15: facility utilities and upkeep."
+      },
+      {
+        "sequence": 47,
+        "timestampTicks": 1267500,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496947500,
+        "description": "Day 15: facility utilities and upkeep."
+      },
+      {
+        "sequence": 48,
+        "timestampTicks": 1267500,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496947500,
+        "description": "Day 15: recurring billing settled."
+      },
+      {
+        "sequence": 49,
+        "timestampTicks": 1353900,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496946000,
+        "description": "Day 16: facility utilities and upkeep."
+      },
+      {
+        "sequence": 50,
+        "timestampTicks": 1353900,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496944000,
+        "description": "Day 16: facility utilities and upkeep."
+      },
+      {
+        "sequence": 51,
+        "timestampTicks": 1353900,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496944000,
+        "description": "Day 16: recurring billing settled."
+      },
+      {
+        "sequence": 52,
+        "timestampTicks": 1440300,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496942500,
+        "description": "Day 17: facility utilities and upkeep."
+      },
+      {
+        "sequence": 53,
+        "timestampTicks": 1440300,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496940500,
+        "description": "Day 17: facility utilities and upkeep."
+      },
+      {
+        "sequence": 54,
+        "timestampTicks": 1440300,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496940500,
+        "description": "Day 17: recurring billing settled."
+      },
+      {
+        "sequence": 55,
+        "timestampTicks": 1526700,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496939000,
+        "description": "Day 18: facility utilities and upkeep."
+      },
+      {
+        "sequence": 56,
+        "timestampTicks": 1526700,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496937000,
+        "description": "Day 18: facility utilities and upkeep."
+      },
+      {
+        "sequence": 57,
+        "timestampTicks": 1526700,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496937000,
+        "description": "Day 18: recurring billing settled."
+      },
+      {
+        "sequence": 58,
+        "timestampTicks": 1613100,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496935500,
+        "description": "Day 19: facility utilities and upkeep."
+      },
+      {
+        "sequence": 59,
+        "timestampTicks": 1613100,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496933500,
+        "description": "Day 19: facility utilities and upkeep."
+      },
+      {
+        "sequence": 60,
+        "timestampTicks": 1613100,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496933500,
+        "description": "Day 19: recurring billing settled."
+      },
+      {
+        "sequence": 61,
+        "timestampTicks": 1699500,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496932000,
+        "description": "Day 20: facility utilities and upkeep."
+      },
+      {
+        "sequence": 62,
+        "timestampTicks": 1699500,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496930000,
+        "description": "Day 20: facility utilities and upkeep."
+      },
+      {
+        "sequence": 63,
+        "timestampTicks": 1699500,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496930000,
+        "description": "Day 20: recurring billing settled."
+      },
+      {
+        "sequence": 64,
+        "timestampTicks": 1785900,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496928500,
+        "description": "Day 21: facility utilities and upkeep."
+      },
+      {
+        "sequence": 65,
+        "timestampTicks": 1785900,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496926500,
+        "description": "Day 21: facility utilities and upkeep."
+      },
+      {
+        "sequence": 66,
+        "timestampTicks": 1785900,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496926500,
+        "description": "Day 21: recurring billing settled."
+      },
+      {
+        "sequence": 67,
+        "timestampTicks": 1872300,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496925000,
+        "description": "Day 22: facility utilities and upkeep."
+      },
+      {
+        "sequence": 68,
+        "timestampTicks": 1872300,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496923000,
+        "description": "Day 22: facility utilities and upkeep."
+      },
+      {
+        "sequence": 69,
+        "timestampTicks": 1872300,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496923000,
+        "description": "Day 22: recurring billing settled."
+      },
+      {
+        "sequence": 70,
+        "timestampTicks": 1958700,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496921500,
+        "description": "Day 23: facility utilities and upkeep."
+      },
+      {
+        "sequence": 71,
+        "timestampTicks": 1958700,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496919500,
+        "description": "Day 23: facility utilities and upkeep."
+      },
+      {
+        "sequence": 72,
+        "timestampTicks": 1958700,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496919500,
+        "description": "Day 23: recurring billing settled."
+      },
+      {
+        "sequence": 73,
+        "timestampTicks": 2045100,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496918000,
+        "description": "Day 24: facility utilities and upkeep."
+      },
+      {
+        "sequence": 74,
+        "timestampTicks": 2045100,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496916000,
+        "description": "Day 24: facility utilities and upkeep."
+      },
+      {
+        "sequence": 75,
+        "timestampTicks": 2045100,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496916000,
+        "description": "Day 24: recurring billing settled."
+      },
+      {
+        "sequence": 76,
+        "timestampTicks": 2131500,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496914500,
+        "description": "Day 25: facility utilities and upkeep."
+      },
+      {
+        "sequence": 77,
+        "timestampTicks": 2131500,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496912500,
+        "description": "Day 25: facility utilities and upkeep."
+      },
+      {
+        "sequence": 78,
+        "timestampTicks": 2131500,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496912500,
+        "description": "Day 25: recurring billing settled."
+      },
+      {
+        "sequence": 79,
+        "timestampTicks": 2217900,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496911000,
+        "description": "Day 26: facility utilities and upkeep."
+      },
+      {
+        "sequence": 80,
+        "timestampTicks": 2217900,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496909000,
+        "description": "Day 26: facility utilities and upkeep."
+      },
+      {
+        "sequence": 81,
+        "timestampTicks": 2217900,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496909000,
+        "description": "Day 26: recurring billing settled."
+      },
+      {
+        "sequence": 82,
+        "timestampTicks": 2304300,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496907500,
+        "description": "Day 27: facility utilities and upkeep."
+      },
+      {
+        "sequence": 83,
+        "timestampTicks": 2304300,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496905500,
+        "description": "Day 27: facility utilities and upkeep."
+      },
+      {
+        "sequence": 84,
+        "timestampTicks": 2304300,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496905500,
+        "description": "Day 27: recurring billing settled."
+      },
+      {
+        "sequence": 85,
+        "timestampTicks": 2390700,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496904000,
+        "description": "Day 28: facility utilities and upkeep."
+      },
+      {
+        "sequence": 86,
+        "timestampTicks": 2390700,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496902000,
+        "description": "Day 28: facility utilities and upkeep."
+      },
+      {
+        "sequence": 87,
+        "timestampTicks": 2390700,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496902000,
+        "description": "Day 28: recurring billing settled."
+      },
+      {
+        "sequence": 88,
+        "timestampTicks": 2477100,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496900500,
+        "description": "Day 29: facility utilities and upkeep."
+      },
+      {
+        "sequence": 89,
+        "timestampTicks": 2477100,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496898500,
+        "description": "Day 29: facility utilities and upkeep."
+      },
+      {
+        "sequence": 90,
+        "timestampTicks": 2477100,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496898500,
+        "description": "Day 29: recurring billing settled."
+      },
+      {
+        "sequence": 91,
+        "timestampTicks": 2563500,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496897000,
+        "description": "Day 30: facility utilities and upkeep."
+      },
+      {
+        "sequence": 92,
+        "timestampTicks": 2563500,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496895000,
+        "description": "Day 30: facility utilities and upkeep."
+      },
+      {
+        "sequence": 93,
+        "timestampTicks": 2563500,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496895000,
+        "description": "Day 30: recurring billing settled."
+      },
+      {
+        "sequence": 94,
+        "timestampTicks": 2649900,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 1,
+        "floor": null,
+        "amountMinor": -1500,
+        "balanceAfterMinor": 2496893500,
+        "description": "Day 31: facility utilities and upkeep."
+      },
+      {
+        "sequence": 95,
+        "timestampTicks": 2649900,
+        "category": "Operations.FacilityUpkeep",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": -2000,
+        "balanceAfterMinor": 2496891500,
+        "description": "Day 31: facility utilities and upkeep."
+      },
+      {
+        "sequence": 96,
+        "timestampTicks": 2649900,
+        "category": "Billing.Settlement",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": 0,
+        "balanceAfterMinor": 2496891500,
+        "description": "Day 31: recurring billing settled."
+      }
+    ],
+    "clock": {
+      "currentTick": 2714718,
+      "firstSimulationSequence": 1
+    }
+  },
+  "transport": {
+    "schemaVersion": 1,
+    "currentTick": 2714718,
+    "topologyVersion": 1,
+    "observedWorldTopologyVersion": 2,
+    "banks": [],
+    "stairs": [],
+    "journeys": [],
+    "waitSamples": [],
+    "abandonedTrips": 0,
+    "occupiedCarTicks": 0,
+    "availableSeatTicks": 0
+  },
+  "locationId": "tokyo",
+  "siteId": "central",
+  "sandbox": true,
+  "tick": 2714718,
+  "nextPersonId": 3,
+  "randomState": 20260930,
+  "reputation": 66,
+  "completedTrips": 4,
+  "peakPopulation": 2,
+  "todayRevenue": 0,
+  "todayExpenses": 0,
+  "todayArrivals": 0,
+  "todayDepartures": 0,
+  "todayAbandoned": 0,
+  "operations": [
+    {
+      "roomId": 1,
+      "priceMinor": 0,
+      "open": true,
+      "staff": 0,
+      "cleanliness": 0,
+      "condition": 0,
+      "dirty": false,
+      "reservationPersonId": null,
+      "contractActive": false,
+      "lastRentDay": -1,
+      "lastArrivalTick": -86400,
+      "condoSold": false,
+      "condoSaleMinor": 0,
+      "film": 0,
+      "nextEventTick": 0,
+      "eventPrepared": false,
+      "grossRevenueMinor": 0,
+      "costsMinor": 46500
+    },
+    {
+      "roomId": 2,
+      "priceMinor": 2200000,
+      "open": true,
+      "staff": 0,
+      "cleanliness": 0,
+      "condition": 0,
+      "dirty": false,
+      "reservationPersonId": null,
+      "contractActive": true,
+      "lastRentDay": -1,
+      "lastArrivalTick": 36300,
+      "condoSold": true,
+      "condoSaleMinor": 2200000,
+      "film": 0,
+      "nextEventTick": 0,
+      "eventPrepared": false,
+      "grossRevenueMinor": 2200000,
+      "costsMinor": 62000
+    }
+  ],
+  "people": [],
+  "reports": [
+    {
+      "day": 1,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 2,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 93,
+      "profitMinor": -3500
+    },
+    {
+      "day": 2,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 83,
+      "profitMinor": -3500
+    },
+    {
+      "day": 3,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 75,
+      "profitMinor": -3500
+    },
+    {
+      "day": 4,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 69,
+      "profitMinor": -3500
+    },
+    {
+      "day": 5,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 6,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 7,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 8,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 9,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 10,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 11,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 12,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 13,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 14,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 15,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 16,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 17,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 18,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 19,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 20,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 21,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 22,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 23,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 24,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 25,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 26,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 27,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 28,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 29,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 30,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 0,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    },
+    {
+      "day": 31,
+      "revenueMinor": 0,
+      "expensesMinor": 3500,
+      "arrivals": 0,
+      "departures": 2,
+      "abandoned": 0,
+      "satisfaction": 66,
+      "profitMinor": -3500
+    }
+  ],
+  "notices": [
+    {
+      "tick": 0,
+      "text": "Welcome. Build a ground lobby, connect upper floors, and keep facilities staffed and clean.",
+      "kind": "Tutorial"
+    },
+    {
+      "tick": 57900,
+      "text": "Day 1 closed. Operating result -35; satisfaction 93%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 144300,
+      "text": "Day 2 closed. Operating result -35; satisfaction 83%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 230700,
+      "text": "Room 1 needs maintenance before it reaches the closure threshold (30).",
+      "kind": "Warning"
+    },
+    {
+      "tick": 230700,
+      "text": "Room 2 needs maintenance before it reaches the closure threshold (30).",
+      "kind": "Warning"
+    },
+    {
+      "tick": 230700,
+      "text": "Day 3 closed. Operating result -35; satisfaction 75%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 317100,
+      "text": "Day 4 closed. Operating result -35; satisfaction 69%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 403500,
+      "text": "Day 5 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 489900,
+      "text": "Day 6 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 576300,
+      "text": "Day 7 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 662700,
+      "text": "Day 8 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 749100,
+      "text": "Day 9 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 835500,
+      "text": "Day 10 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 921900,
+      "text": "Day 11 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 1008300,
+      "text": "Day 12 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 1094700,
+      "text": "Day 13 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 1181100,
+      "text": "Day 14 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 1267500,
+      "text": "Day 15 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 1353900,
+      "text": "Day 16 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 1440300,
+      "text": "Day 17 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 1526700,
+      "text": "Day 18 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 1613100,
+      "text": "Day 19 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 1699500,
+      "text": "Day 20 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 1785900,
+      "text": "Day 21 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 1872300,
+      "text": "Day 22 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 1958700,
+      "text": "Day 23 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 2045100,
+      "text": "Day 24 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 2131500,
+      "text": "Day 25 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 2217900,
+      "text": "Day 26 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 2304300,
+      "text": "Day 27 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 2390700,
+      "text": "Day 28 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 2477100,
+      "text": "Day 29 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 2563500,
+      "text": "Day 30 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    },
+    {
+      "tick": 2649900,
+      "text": "Day 31 closed. Operating result -35; satisfaction 66%.",
+      "kind": "Report"
+    }
+  ],
+  "finance": {
+    "billing": {
+      "lastSettledDay": 31,
+      "lastSettledTick": 2649900,
+      "nextDueTick": 2736300
+    },
+    "currentPeriodFirstSequence": 97,
+    "periods": [
+      {
+        "day": 1,
+        "firstSequence": 1,
+        "lastSequence": 6
+      },
+      {
+        "day": 2,
+        "firstSequence": 7,
+        "lastSequence": 9
+      },
+      {
+        "day": 3,
+        "firstSequence": 10,
+        "lastSequence": 12
+      },
+      {
+        "day": 4,
+        "firstSequence": 13,
+        "lastSequence": 15
+      },
+      {
+        "day": 5,
+        "firstSequence": 16,
+        "lastSequence": 18
+      },
+      {
+        "day": 6,
+        "firstSequence": 19,
+        "lastSequence": 21
+      },
+      {
+        "day": 7,
+        "firstSequence": 22,
+        "lastSequence": 24
+      },
+      {
+        "day": 8,
+        "firstSequence": 25,
+        "lastSequence": 27
+      },
+      {
+        "day": 9,
+        "firstSequence": 28,
+        "lastSequence": 30
+      },
+      {
+        "day": 10,
+        "firstSequence": 31,
+        "lastSequence": 33
+      },
+      {
+        "day": 11,
+        "firstSequence": 34,
+        "lastSequence": 36
+      },
+      {
+        "day": 12,
+        "firstSequence": 37,
+        "lastSequence": 39
+      },
+      {
+        "day": 13,
+        "firstSequence": 40,
+        "lastSequence": 42
+      },
+      {
+        "day": 14,
+        "firstSequence": 43,
+        "lastSequence": 45
+      },
+      {
+        "day": 15,
+        "firstSequence": 46,
+        "lastSequence": 48
+      },
+      {
+        "day": 16,
+        "firstSequence": 49,
+        "lastSequence": 51
+      },
+      {
+        "day": 17,
+        "firstSequence": 52,
+        "lastSequence": 54
+      },
+      {
+        "day": 18,
+        "firstSequence": 55,
+        "lastSequence": 57
+      },
+      {
+        "day": 19,
+        "firstSequence": 58,
+        "lastSequence": 60
+      },
+      {
+        "day": 20,
+        "firstSequence": 61,
+        "lastSequence": 63
+      },
+      {
+        "day": 21,
+        "firstSequence": 64,
+        "lastSequence": 66
+      },
+      {
+        "day": 22,
+        "firstSequence": 67,
+        "lastSequence": 69
+      },
+      {
+        "day": 23,
+        "firstSequence": 70,
+        "lastSequence": 72
+      },
+      {
+        "day": 24,
+        "firstSequence": 73,
+        "lastSequence": 75
+      },
+      {
+        "day": 25,
+        "firstSequence": 76,
+        "lastSequence": 78
+      },
+      {
+        "day": 26,
+        "firstSequence": 79,
+        "lastSequence": 81
+      },
+      {
+        "day": 27,
+        "firstSequence": 82,
+        "lastSequence": 84
+      },
+      {
+        "day": 28,
+        "firstSequence": 85,
+        "lastSequence": 87
+      },
+      {
+        "day": 29,
+        "firstSequence": 88,
+        "lastSequence": 90
+      },
+      {
+        "day": 30,
+        "firstSequence": 91,
+        "lastSequence": 93
+      },
+      {
+        "day": 31,
+        "firstSequence": 94,
+        "lastSequence": 96
+      }
+    ],
+    "legacyThroughSequence": 0,
+    "pendingBatches": []
+  },
+  "management": {
+    "businesses": {
+      "nextTenantId": 1,
+      "nextFoodOrderId": 1,
+      "nextBookingId": 1,
+      "tenants": [],
+      "foodOrders": [],
+      "hotelBookings": []
+    },
+    "services": {
+      "nextTaskId": 3,
+      "tasks": [
+        {
+          "id": 1,
+          "roomId": 2,
+          "kind": "Cleaning",
+          "status": "Blocked",
+          "workerPersonId": null,
+          "depotRoomId": null,
+          "createdTick": 43560,
+          "updatedTick": 43560,
+          "workDueTick": null,
+          "finishedTick": null,
+          "reason": "No open, staffed and accessible service depot."
+        },
+        {
+          "id": 2,
+          "roomId": 1,
+          "kind": "CleaningAndMaintenance",
+          "status": "Blocked",
+          "workerPersonId": null,
+          "depotRoomId": null,
+          "createdTick": 54360,
+          "updatedTick": 54360,
+          "workDueTick": null,
+          "finishedTick": null,
+          "reason": "No open, staffed and accessible service depot."
+        }
+      ]
+    },
+    "satisfaction": {
+      "nextComplaintId": 5,
+      "experiences": [
+        {
+          "roomId": 1,
+          "satisfaction": 66,
+          "lastTravelSeconds": 0,
+          "completionScore": 100
+        },
+        {
+          "roomId": 2,
+          "satisfaction": 66,
+          "lastTravelSeconds": 8,
+          "completionScore": 100
+        }
+      ],
+      "complaints": [
+        {
+          "id": 1,
+          "roomId": 2,
+          "code": "Cleaning",
+          "message": "Room is awaiting cleaning.",
+          "createdTick": 68700,
+          "resolvedTick": null
+        },
+        {
+          "id": 2,
+          "roomId": 1,
+          "code": "Condition",
+          "message": "Room condition needs maintenance.",
+          "createdTick": 108300,
+          "resolvedTick": null
+        },
+        {
+          "id": 3,
+          "roomId": 1,
+          "code": "Cleaning",
+          "message": "Room is awaiting cleaning.",
+          "createdTick": 108300,
+          "resolvedTick": null
+        },
+        {
+          "id": 4,
+          "roomId": 2,
+          "code": "Condition",
+          "message": "Room condition needs maintenance.",
+          "createdTick": 108300,
+          "resolvedTick": null
+        }
+      ],
+      "history": [
+        {
+          "tick": 2113500,
+          "score": 66
+        },
+        {
+          "tick": 2117100,
+          "score": 66
+        },
+        {
+          "tick": 2120700,
+          "score": 66
+        },
+        {
+          "tick": 2124300,
+          "score": 66
+        },
+        {
+          "tick": 2127900,
+          "score": 66
+        },
+        {
+          "tick": 2131500,
+          "score": 66
+        },
+        {
+          "tick": 2135100,
+          "score": 66
+        },
+        {
+          "tick": 2138700,
+          "score": 66
+        },
+        {
+          "tick": 2142300,
+          "score": 66
+        },
+        {
+          "tick": 2145900,
+          "score": 66
+        },
+        {
+          "tick": 2149500,
+          "score": 66
+        },
+        {
+          "tick": 2153100,
+          "score": 66
+        },
+        {
+          "tick": 2156700,
+          "score": 66
+        },
+        {
+          "tick": 2160300,
+          "score": 66
+        },
+        {
+          "tick": 2163900,
+          "score": 66
+        },
+        {
+          "tick": 2167500,
+          "score": 66
+        },
+        {
+          "tick": 2171100,
+          "score": 66
+        },
+        {
+          "tick": 2174700,
+          "score": 66
+        },
+        {
+          "tick": 2178300,
+          "score": 66
+        },
+        {
+          "tick": 2181900,
+          "score": 66
+        },
+        {
+          "tick": 2185500,
+          "score": 66
+        },
+        {
+          "tick": 2189100,
+          "score": 66
+        },
+        {
+          "tick": 2192700,
+          "score": 66
+        },
+        {
+          "tick": 2196300,
+          "score": 66
+        },
+        {
+          "tick": 2199900,
+          "score": 66
+        },
+        {
+          "tick": 2203500,
+          "score": 66
+        },
+        {
+          "tick": 2207100,
+          "score": 66
+        },
+        {
+          "tick": 2210700,
+          "score": 66
+        },
+        {
+          "tick": 2214300,
+          "score": 66
+        },
+        {
+          "tick": 2217900,
+          "score": 66
+        },
+        {
+          "tick": 2221500,
+          "score": 66
+        },
+        {
+          "tick": 2225100,
+          "score": 66
+        },
+        {
+          "tick": 2228700,
+          "score": 66
+        },
+        {
+          "tick": 2232300,
+          "score": 66
+        },
+        {
+          "tick": 2235900,
+          "score": 66
+        },
+        {
+          "tick": 2239500,
+          "score": 66
+        },
+        {
+          "tick": 2243100,
+          "score": 66
+        },
+        {
+          "tick": 2246700,
+          "score": 66
+        },
+        {
+          "tick": 2250300,
+          "score": 66
+        },
+        {
+          "tick": 2253900,
+          "score": 66
+        },
+        {
+          "tick": 2257500,
+          "score": 66
+        },
+        {
+          "tick": 2261100,
+          "score": 66
+        },
+        {
+          "tick": 2264700,
+          "score": 66
+        },
+        {
+          "tick": 2268300,
+          "score": 66
+        },
+        {
+          "tick": 2271900,
+          "score": 66
+        },
+        {
+          "tick": 2275500,
+          "score": 66
+        },
+        {
+          "tick": 2279100,
+          "score": 66
+        },
+        {
+          "tick": 2282700,
+          "score": 66
+        },
+        {
+          "tick": 2286300,
+          "score": 66
+        },
+        {
+          "tick": 2289900,
+          "score": 66
+        },
+        {
+          "tick": 2293500,
+          "score": 66
+        },
+        {
+          "tick": 2297100,
+          "score": 66
+        },
+        {
+          "tick": 2300700,
+          "score": 66
+        },
+        {
+          "tick": 2304300,
+          "score": 66
+        },
+        {
+          "tick": 2307900,
+          "score": 66
+        },
+        {
+          "tick": 2311500,
+          "score": 66
+        },
+        {
+          "tick": 2315100,
+          "score": 66
+        },
+        {
+          "tick": 2318700,
+          "score": 66
+        },
+        {
+          "tick": 2322300,
+          "score": 66
+        },
+        {
+          "tick": 2325900,
+          "score": 66
+        },
+        {
+          "tick": 2329500,
+          "score": 66
+        },
+        {
+          "tick": 2333100,
+          "score": 66
+        },
+        {
+          "tick": 2336700,
+          "score": 66
+        },
+        {
+          "tick": 2340300,
+          "score": 66
+        },
+        {
+          "tick": 2343900,
+          "score": 66
+        },
+        {
+          "tick": 2347500,
+          "score": 66
+        },
+        {
+          "tick": 2351100,
+          "score": 66
+        },
+        {
+          "tick": 2354700,
+          "score": 66
+        },
+        {
+          "tick": 2358300,
+          "score": 66
+        },
+        {
+          "tick": 2361900,
+          "score": 66
+        },
+        {
+          "tick": 2365500,
+          "score": 66
+        },
+        {
+          "tick": 2369100,
+          "score": 66
+        },
+        {
+          "tick": 2372700,
+          "score": 66
+        },
+        {
+          "tick": 2376300,
+          "score": 66
+        },
+        {
+          "tick": 2379900,
+          "score": 66
+        },
+        {
+          "tick": 2383500,
+          "score": 66
+        },
+        {
+          "tick": 2387100,
+          "score": 66
+        },
+        {
+          "tick": 2390700,
+          "score": 66
+        },
+        {
+          "tick": 2394300,
+          "score": 66
+        },
+        {
+          "tick": 2397900,
+          "score": 66
+        },
+        {
+          "tick": 2401500,
+          "score": 66
+        },
+        {
+          "tick": 2405100,
+          "score": 66
+        },
+        {
+          "tick": 2408700,
+          "score": 66
+        },
+        {
+          "tick": 2412300,
+          "score": 66
+        },
+        {
+          "tick": 2415900,
+          "score": 66
+        },
+        {
+          "tick": 2419500,
+          "score": 66
+        },
+        {
+          "tick": 2423100,
+          "score": 66
+        },
+        {
+          "tick": 2426700,
+          "score": 66
+        },
+        {
+          "tick": 2430300,
+          "score": 66
+        },
+        {
+          "tick": 2433900,
+          "score": 66
+        },
+        {
+          "tick": 2437500,
+          "score": 66
+        },
+        {
+          "tick": 2441100,
+          "score": 66
+        },
+        {
+          "tick": 2444700,
+          "score": 66
+        },
+        {
+          "tick": 2448300,
+          "score": 66
+        },
+        {
+          "tick": 2451900,
+          "score": 66
+        },
+        {
+          "tick": 2455500,
+          "score": 66
+        },
+        {
+          "tick": 2459100,
+          "score": 66
+        },
+        {
+          "tick": 2462700,
+          "score": 66
+        },
+        {
+          "tick": 2466300,
+          "score": 66
+        },
+        {
+          "tick": 2469900,
+          "score": 66
+        },
+        {
+          "tick": 2473500,
+          "score": 66
+        },
+        {
+          "tick": 2477100,
+          "score": 66
+        },
+        {
+          "tick": 2480700,
+          "score": 66
+        },
+        {
+          "tick": 2484300,
+          "score": 66
+        },
+        {
+          "tick": 2487900,
+          "score": 66
+        },
+        {
+          "tick": 2491500,
+          "score": 66
+        },
+        {
+          "tick": 2495100,
+          "score": 66
+        },
+        {
+          "tick": 2498700,
+          "score": 66
+        },
+        {
+          "tick": 2502300,
+          "score": 66
+        },
+        {
+          "tick": 2505900,
+          "score": 66
+        },
+        {
+          "tick": 2509500,
+          "score": 66
+        },
+        {
+          "tick": 2513100,
+          "score": 66
+        },
+        {
+          "tick": 2516700,
+          "score": 66
+        },
+        {
+          "tick": 2520300,
+          "score": 66
+        },
+        {
+          "tick": 2523900,
+          "score": 66
+        },
+        {
+          "tick": 2527500,
+          "score": 66
+        },
+        {
+          "tick": 2531100,
+          "score": 66
+        },
+        {
+          "tick": 2534700,
+          "score": 66
+        },
+        {
+          "tick": 2538300,
+          "score": 66
+        },
+        {
+          "tick": 2541900,
+          "score": 66
+        },
+        {
+          "tick": 2545500,
+          "score": 66
+        },
+        {
+          "tick": 2549100,
+          "score": 66
+        },
+        {
+          "tick": 2552700,
+          "score": 66
+        },
+        {
+          "tick": 2556300,
+          "score": 66
+        },
+        {
+          "tick": 2559900,
+          "score": 66
+        },
+        {
+          "tick": 2563500,
+          "score": 66
+        },
+        {
+          "tick": 2567100,
+          "score": 66
+        },
+        {
+          "tick": 2570700,
+          "score": 66
+        },
+        {
+          "tick": 2574300,
+          "score": 66
+        },
+        {
+          "tick": 2577900,
+          "score": 66
+        },
+        {
+          "tick": 2581500,
+          "score": 66
+        },
+        {
+          "tick": 2585100,
+          "score": 66
+        },
+        {
+          "tick": 2588700,
+          "score": 66
+        },
+        {
+          "tick": 2592300,
+          "score": 66
+        },
+        {
+          "tick": 2595900,
+          "score": 66
+        },
+        {
+          "tick": 2599500,
+          "score": 66
+        },
+        {
+          "tick": 2603100,
+          "score": 66
+        },
+        {
+          "tick": 2606700,
+          "score": 66
+        },
+        {
+          "tick": 2610300,
+          "score": 66
+        },
+        {
+          "tick": 2613900,
+          "score": 66
+        },
+        {
+          "tick": 2617500,
+          "score": 66
+        },
+        {
+          "tick": 2621100,
+          "score": 66
+        },
+        {
+          "tick": 2624700,
+          "score": 66
+        },
+        {
+          "tick": 2628300,
+          "score": 66
+        },
+        {
+          "tick": 2631900,
+          "score": 66
+        },
+        {
+          "tick": 2635500,
+          "score": 66
+        },
+        {
+          "tick": 2639100,
+          "score": 66
+        },
+        {
+          "tick": 2642700,
+          "score": 66
+        },
+        {
+          "tick": 2646300,
+          "score": 66
+        },
+        {
+          "tick": 2649900,
+          "score": 66
+        },
+        {
+          "tick": 2653500,
+          "score": 66
+        },
+        {
+          "tick": 2657100,
+          "score": 66
+        },
+        {
+          "tick": 2660700,
+          "score": 66
+        },
+        {
+          "tick": 2664300,
+          "score": 66
+        },
+        {
+          "tick": 2667900,
+          "score": 66
+        },
+        {
+          "tick": 2671500,
+          "score": 66
+        },
+        {
+          "tick": 2675100,
+          "score": 66
+        },
+        {
+          "tick": 2678700,
+          "score": 66
+        },
+        {
+          "tick": 2682300,
+          "score": 66
+        },
+        {
+          "tick": 2685900,
+          "score": 66
+        },
+        {
+          "tick": 2689500,
+          "score": 66
+        },
+        {
+          "tick": 2693100,
+          "score": 66
+        },
+        {
+          "tick": 2696700,
+          "score": 66
+        },
+        {
+          "tick": 2700300,
+          "score": 66
+        },
+        {
+          "tick": 2703900,
+          "score": 66
+        },
+        {
+          "tick": 2707500,
+          "score": 66
+        },
+        {
+          "tick": 2711100,
+          "score": 66
+        },
+        {
+          "tick": 2714700,
+          "score": 66
+        }
+      ]
+    }
+  }
+}

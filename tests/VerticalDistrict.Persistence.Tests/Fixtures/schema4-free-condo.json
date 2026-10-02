@@ -1,0 +1,299 @@
+{
+  "schemaVersion": 4,
+  "rulesFingerprint": "3712C221702F5DF9BA75074090E6813A5BC3E65C0E2EFA9E9FFA2BD451DE2451",
+  "geographyFingerprint": "9C50B6B3D6AE9986ECD5440F714D7E7D12FE2044B47E23A5B9DA093D00AE600C",
+  "world": {
+    "schemaVersion": 2,
+    "contentFingerprint": "332B6128C7B0A4F1A5E76604AA9A15E02226D825AB3E5F628C7B6401A8CA4AAF",
+    "startingCashMinor": 2500000000,
+    "cashMinor": 2494800000,
+    "rank": 7,
+    "nextRoomId": 3,
+    "commandSequence": 2,
+    "topologyVersion": 2,
+    "floors": [
+      0
+    ],
+    "rooms": [
+      {
+        "id": 1,
+        "definitionId": "lobby",
+        "x": 0,
+        "floor": 0
+      },
+      {
+        "id": 2,
+        "definitionId": "condo",
+        "x": 8,
+        "floor": 0
+      }
+    ],
+    "ledger": [
+      {
+        "sequence": 1,
+        "timestampTicks": 0,
+        "category": "Construction.Room",
+        "entityId": 1,
+        "floor": 0,
+        "amountMinor": -1200000,
+        "balanceAfterMinor": 2498800000,
+        "description": "Built Entrance Lobby #1."
+      },
+      {
+        "sequence": 2,
+        "timestampTicks": 0,
+        "category": "Construction.Room",
+        "entityId": 2,
+        "floor": 0,
+        "amountMinor": -4000000,
+        "balanceAfterMinor": 2494800000,
+        "description": "Built Condominium #2."
+      }
+    ],
+    "clock": {
+      "currentTick": 36318,
+      "firstSimulationSequence": 1
+    }
+  },
+  "transport": {
+    "schemaVersion": 1,
+    "currentTick": 36318,
+    "topologyVersion": 1,
+    "observedWorldTopologyVersion": 2,
+    "banks": [],
+    "stairs": [],
+    "journeys": [
+      {
+        "personId": 1,
+        "state": "Arrived",
+        "floor": 0,
+        "x": 8,
+        "destinationFloor": 0,
+        "destinationX": 8,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 8,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 8,
+        "waitSinceTick": 0,
+        "totalWaitTicks": 0,
+        "routeVersion": 1
+      },
+      {
+        "personId": 2,
+        "state": "Arrived",
+        "floor": 0,
+        "x": 8,
+        "destinationFloor": 0,
+        "destinationX": 8,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 8,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 8,
+        "waitSinceTick": 0,
+        "totalWaitTicks": 0,
+        "routeVersion": 1
+      }
+    ],
+    "waitSamples": [],
+    "abandonedTrips": 0,
+    "occupiedCarTicks": 0,
+    "availableSeatTicks": 0
+  },
+  "locationId": "tokyo",
+  "siteId": "central",
+  "sandbox": true,
+  "tick": 36318,
+  "nextPersonId": 3,
+  "randomState": 20260930,
+  "reputation": 96,
+  "completedTrips": 2,
+  "peakPopulation": 2,
+  "todayRevenue": 0,
+  "todayExpenses": 0,
+  "todayArrivals": 2,
+  "todayDepartures": 0,
+  "todayAbandoned": 0,
+  "operations": [
+    {
+      "roomId": 1,
+      "priceMinor": 0,
+      "open": true,
+      "staff": 0,
+      "cleanliness": 89,
+      "condition": 89,
+      "dirty": false,
+      "reservationPersonId": null,
+      "contractActive": false,
+      "lastRentDay": -1,
+      "lastArrivalTick": -86400,
+      "condoSold": false,
+      "condoSaleMinor": 0,
+      "film": 0,
+      "nextEventTick": 0,
+      "eventPrepared": false,
+      "grossRevenueMinor": 0,
+      "costsMinor": 0
+    },
+    {
+      "roomId": 2,
+      "priceMinor": 0,
+      "open": true,
+      "staff": 0,
+      "cleanliness": 87,
+      "condition": 89,
+      "dirty": false,
+      "reservationPersonId": null,
+      "contractActive": true,
+      "lastRentDay": -1,
+      "lastArrivalTick": 36300,
+      "condoSold": true,
+      "condoSaleMinor": 0,
+      "film": 0,
+      "nextEventTick": 0,
+      "eventPrepared": false,
+      "grossRevenueMinor": 0,
+      "costsMinor": 0
+    }
+  ],
+  "people": [
+    {
+      "id": 1,
+      "roomId": 2,
+      "role": "Owner",
+      "activity": "Visiting",
+      "actionAt": 2628308,
+      "createdAt": 36300,
+      "satisfaction": 96,
+      "serviceTargetId": null
+    },
+    {
+      "id": 2,
+      "roomId": 2,
+      "role": "Owner",
+      "activity": "Visiting",
+      "actionAt": 2628308,
+      "createdAt": 36300,
+      "satisfaction": 96,
+      "serviceTargetId": null
+    }
+  ],
+  "reports": [],
+  "notices": [
+    {
+      "tick": 0,
+      "text": "Welcome. Build a ground lobby, connect upper floors, and keep facilities staffed and clean.",
+      "kind": "Tutorial"
+    }
+  ],
+  "finance": {
+    "billing": {
+      "lastSettledDay": 0,
+      "lastSettledTick": 0,
+      "nextDueTick": 57900
+    },
+    "currentPeriodFirstSequence": 1,
+    "periods": [],
+    "legacyThroughSequence": 0,
+    "pendingBatches": []
+  },
+  "management": {
+    "businesses": {
+      "nextTenantId": 1,
+      "nextFoodOrderId": 1,
+      "nextBookingId": 1,
+      "tenants": [],
+      "foodOrders": [],
+      "hotelBookings": []
+    },
+    "services": {
+      "nextTaskId": 1,
+      "tasks": []
+    },
+    "satisfaction": {
+      "nextComplaintId": 1,
+      "experiences": [
+        {
+          "roomId": 1,
+          "satisfaction": 96,
+          "lastTravelSeconds": 0,
+          "completionScore": 100
+        },
+        {
+          "roomId": 2,
+          "satisfaction": 96,
+          "lastTravelSeconds": 8,
+          "completionScore": 100
+        }
+      ],
+      "complaints": [],
+      "history": [
+        {
+          "tick": 300,
+          "score": 80
+        },
+        {
+          "tick": 3900,
+          "score": 85
+        },
+        {
+          "tick": 7500,
+          "score": 90
+        },
+        {
+          "tick": 11100,
+          "score": 95
+        },
+        {
+          "tick": 14700,
+          "score": 98
+        },
+        {
+          "tick": 18300,
+          "score": 98
+        },
+        {
+          "tick": 21900,
+          "score": 97
+        },
+        {
+          "tick": 25500,
+          "score": 97
+        },
+        {
+          "tick": 29100,
+          "score": 97
+        },
+        {
+          "tick": 32700,
+          "score": 96
+        },
+        {
+          "tick": 36300,
+          "score": 96
+        }
+      ]
+    }
+  }
+}

@@ -13,7 +13,8 @@ public sealed record SessionSnapshot(int SchemaVersion, string RulesFingerprint,
     ConstructionSnapshot World, TransportSnapshot Transport, string LocationId, string SiteId, bool Sandbox,
     long Tick, long NextPersonId, uint RandomState, int Reputation, int CompletedTrips, int PeakPopulation,
     long TodayRevenue, long TodayExpenses, int TodayArrivals, int TodayDepartures, int TodayAbandoned,
-    RoomOperation[] Operations, PersonState[] People, DailyReport[] Reports, GameNotice[] Notices, FinanceSnapshot Finance);
+    RoomOperation[] Operations, PersonState[] People, DailyReport[] Reports, GameNotice[] Notices, FinanceSnapshot Finance,
+    ManagementSnapshot Management);
 
 public sealed partial class GameSession
 {
@@ -25,13 +26,13 @@ public sealed partial class GameSession
         return new JsonSerializerOptions(SimulationRules.JsonOptions) { TypeInfoResolver = resolver };
     }
     private static string Fingerprint<T>(T value) => Convert.ToHexString(SHA256.HashData(JsonSerializer.SerializeToUtf8Bytes(value, SimulationRules.JsonOptions)));
-    public SessionSnapshot CaptureSnapshot() => new(3, Fingerprint(Rules), Fingerprint(Locations.Locations),
+    public SessionSnapshot CaptureSnapshot() => new(7, Fingerprint(Rules), Fingerprint(Locations.Locations),
         World.CaptureSnapshot(), Transport.CaptureSnapshot(), LocationId, SiteId, Sandbox,
         Tick, _nextPersonId, _randomState, Reputation, CompletedTrips, PeakPopulation,
         _todayRevenue, _todayExpenses, _todayArrivals, _todayDepartures, _todayAbandoned,
         _operations.Values.ToArray(), _people.Values.ToArray(), _reports.ToArray(), _notices.ToArray(),
         new FinanceSnapshot(_billing, _currentPeriodFirstSequence, _financialPeriods.ToArray(), _legacyFinanceThroughSequence,
-            _pendingBilling.Select(b => b with { Obligations = b.Obligations.ToArray() }).ToArray()));
+            _pendingBilling.Select(b => b with { Obligations = b.Obligations.ToArray() }).ToArray()), CaptureManagementSnapshot());
     public string Serialize() => JsonSerializer.Serialize(CaptureSnapshot(), SaveOptions);
     public static GameSession Deserialize(ContentCatalog catalog, SimulationRules rules, LocationCatalog locations, string json)
     {
@@ -53,6 +54,10 @@ public sealed partial class GameSession
             }
             var legacyClock = false;
             var legacyFinance = false;
+            var legacyManagement = false;
+            var legacyOwnership = false;
+            var legacyRetail = false;
+            var legacyTransport = false;
             if (JsonNode.Parse(json) is JsonObject root && root["world"] is JsonObject worldJson)
             {
                 legacyClock = ConstructionSaveCodec.UpgradeLegacySnapshot(worldJson);
@@ -63,11 +68,58 @@ public sealed partial class GameSession
                     root["schemaVersion"] = 3;
                     root["finance"] = JsonSerializer.SerializeToNode(new FinanceSnapshot(new BillingSchedule(0, 0, FirstBillingTick), 1, [], 0, []), SaveOptions);
                 }
-                if (legacyClock || legacyFinance) json = root.ToJsonString();
+                if (root["schemaVersion"]?.GetValue<int>() == 3)
+                {
+                    Require(!root.ContainsKey("management"), "A legacy session cannot contain newer management state.");
+                    legacyManagement = true;
+                    root["schemaVersion"] = 4;
+                    root["management"] = JsonSerializer.SerializeToNode(EmptyManagementSnapshot(), SaveOptions);
+                    if (root["finance"] is JsonObject finance && finance["pendingBatches"] is JsonArray batches)
+                        foreach (var batch in batches.OfType<JsonObject>())
+                            if (batch["obligations"] is JsonArray obligations)
+                                foreach (var obligation in obligations.OfType<JsonObject>())
+                                    if (!obligation.ContainsKey("tenantId")) obligation["tenantId"] = null;
+                }
+                if (root["schemaVersion"]?.GetValue<int>() == 4)
+                {
+                    Require(root["management"] is JsonObject, "Missing authoritative management state.");
+                    var management = root["management"]!.AsObject();
+                    Require(legacyManagement || !management.ContainsKey("ownership"), "A legacy session cannot contain newer ownership state.");
+                    legacyOwnership = true;
+                    root["schemaVersion"] = 5;
+                    management["ownership"] = JsonSerializer.SerializeToNode(new OwnershipSnapshot(1, 0, []), SaveOptions);
+                }
+                if (root["schemaVersion"]?.GetValue<int>() == 5)
+                {
+                    Require(root["management"] is JsonObject, "Missing authoritative management state.");
+                    var management = root["management"]!.AsObject();
+                    Require(legacyManagement || !management.ContainsKey("retail"), "A legacy session cannot contain newer retail state.");
+                    legacyRetail = true;
+                    root["schemaVersion"] = 6;
+                    management["retail"] = JsonSerializer.SerializeToNode(EmptyRetailSnapshot(), SaveOptions);
+                    if (management["businesses"] is JsonObject businesses && businesses["foodOrders"] is JsonArray orders)
+                        foreach (var order in orders.OfType<JsonObject>())
+                        {
+                            Require(!order.ContainsKey("productId") && !order.ContainsKey("agreedServiceSeconds"), "A legacy purchase cannot contain newer product terms.");
+                            order["productId"] = ""; order["agreedServiceSeconds"] = 0;
+                        }
+                }
+                if (root["schemaVersion"]?.GetValue<int>() == 6)
+                {
+                    Require(root["transport"] is JsonObject, "Missing authoritative transport state.");
+                    UpgradeLegacyTransportJson(root["transport"]!.AsObject());
+                    legacyTransport = true;
+                    root["schemaVersion"] = 7;
+                }
+                if (legacyClock || legacyFinance || legacyManagement || legacyOwnership || legacyRetail || legacyTransport) json = root.ToJsonString();
             }
             var save = JsonSerializer.Deserialize<SessionSnapshot>(json, SaveOptions) ?? throw new SaveValidationException("Empty session save.");
-            Require(save.SchemaVersion == 3, "Unsupported session save version.");
-            Require(save.RulesFingerprint == Fingerprint(rules) && save.GeographyFingerprint == Fingerprint(locations.Locations), "This save uses different balance or geography definitions.");
+            Require(save.SchemaVersion == 7, "Unsupported session save version.");
+            Require((legacyRetail
+                    ? save.RulesFingerprint == LegacyRulesFingerprint(rules, false)
+                        || legacyManagement && save.RulesFingerprint == LegacyRulesFingerprint(rules, true)
+                    : save.RulesFingerprint == Fingerprint(rules))
+                && save.GeographyFingerprint == Fingerprint(locations.Locations), "This save uses different balance or geography definitions.");
             Require(save.World != null && save.Transport != null && save.Operations != null && save.People != null && save.Reports != null && save.Notices != null, "Missing session state.");
             Require(save.Tick is >= 0 and <= 315360000 && save.NextPersonId > 0 && save.RandomState != 0, "Invalid clock, ID, or random state.");
             Require(save.Reputation is >= 0 and <= 100 && save.CompletedTrips >= 0 && save.PeakPopulation >= 0 && save.TodayRevenue >= 0 && save.TodayExpenses >= 0
@@ -75,7 +127,10 @@ public sealed partial class GameSession
             var world = ConstructionWorld.FromSnapshot(catalog, save.World!);
             Require(legacyClock || world.SimulationClockTicks == save.Tick, "Construction and session clocks disagree.");
             if (legacyClock) world.SetSimulationClock(save.Tick);
-            var transport = TransportSystem.RestoreSnapshot(world, save.Transport!);
+            Require(save.Transport!.SchemaVersion == 2, "Current sessions require the current transport schema.");
+            TransportSystem transport;
+            try { transport = TransportSystem.RestoreSnapshot(world, save.Transport); }
+            catch (ArgumentException ex) { throw new SaveValidationException(ex.Message); }
             Require(save.Transport!.CurrentTick == save.Tick, "Transport and world clocks disagree.");
             var session = new GameSession(catalog, rules, locations, save.LocationId, save.SiteId, save.Sandbox)
             {
@@ -130,6 +185,7 @@ public sealed partial class GameSession
                 session._notices.Add(notice!);
             }
             session.RestoreFinances(save.Finance, legacyFinance);
+            session.RestoreManagementSnapshot(save.Management, legacyManagement, legacyOwnership, legacyRetail);
             return session;
         }
         catch (JsonException ex) { throw new SaveValidationException("Invalid session JSON: " + ex.Message); }

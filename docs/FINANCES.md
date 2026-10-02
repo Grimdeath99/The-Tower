@@ -1,5 +1,7 @@
 # Management slice A: finances and recurring billing
 
+Historical slice-A handoff (2026-09-30). Its 139-case results, captures, package size and remaining B–H table describe that build. The current [management continuation](MANAGEMENT_LOOP.md) extends tenancy, completed food service, hotel bookings, tasks and satisfaction; consult it and [PROJECT_STATUS.md](PROJECT_STATUS.md) for current acceptance. The financial classification and frozen-billing policy below remain the foundation.
+
 The latest management-loop request is being implemented through its ordered slices A–H. **Slice A passes 139 regression cases and the expanded Godot scene, with zero build warnings/errors.** The audit first reran the existing 121-case baseline. Construction, physical journeys, business receipts, recurring costs and saves already existed; this slice adds consistent financial classification, an explicit recurring-billing schedule and a usable financial view. It does not complete tenant contracts, service tasks, complaints or the full 20-floor management milestone.
 
 The approved GDD and exact earlier facility catalogue remain unavailable. Existing representative facilities and balance values remain original provisional tuning in `Data/simulation.rules.json`; no loans, taxes, insurance or new financial subsystem is introduced.

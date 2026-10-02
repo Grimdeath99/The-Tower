@@ -1,0 +1,2187 @@
+{
+  "schemaVersion": 6,
+  "rulesFingerprint": "8CB433856C213272414E0A4AE9EF568A44E4E06F9B5C045415224601C62966C9",
+  "geographyFingerprint": "9C50B6B3D6AE9986ECD5440F714D7E7D12FE2044B47E23A5B9DA093D00AE600C",
+  "world": {
+    "schemaVersion": 2,
+    "contentFingerprint": "332B6128C7B0A4F1A5E76604AA9A15E02226D825AB3E5F628C7B6401A8CA4AAF",
+    "startingCashMinor": 2500000000,
+    "cashMinor": 2473200000,
+    "rank": 7,
+    "nextRoomId": 5,
+    "commandSequence": 12,
+    "topologyVersion": 10,
+    "floors": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "rooms": [
+      {
+        "id": 1,
+        "definitionId": "lobby",
+        "x": 0,
+        "floor": 0
+      },
+      {
+        "id": 2,
+        "definitionId": "office",
+        "x": 0,
+        "floor": 6
+      },
+      {
+        "id": 3,
+        "definitionId": "office",
+        "x": 5,
+        "floor": 6
+      },
+      {
+        "id": 4,
+        "definitionId": "office",
+        "x": 10,
+        "floor": 6
+      }
+    ],
+    "ledger": [
+      {
+        "sequence": 1,
+        "timestampTicks": 0,
+        "category": "Construction.Floor",
+        "entityId": null,
+        "floor": 1,
+        "amountMinor": -500000,
+        "balanceAfterMinor": 2499500000,
+        "description": "Built floor 1."
+      },
+      {
+        "sequence": 2,
+        "timestampTicks": 0,
+        "category": "Construction.Floor",
+        "entityId": null,
+        "floor": 2,
+        "amountMinor": -500000,
+        "balanceAfterMinor": 2499000000,
+        "description": "Built floor 2."
+      },
+      {
+        "sequence": 3,
+        "timestampTicks": 0,
+        "category": "Construction.Floor",
+        "entityId": null,
+        "floor": 3,
+        "amountMinor": -500000,
+        "balanceAfterMinor": 2498500000,
+        "description": "Built floor 3."
+      },
+      {
+        "sequence": 4,
+        "timestampTicks": 0,
+        "category": "Construction.Floor",
+        "entityId": null,
+        "floor": 4,
+        "amountMinor": -500000,
+        "balanceAfterMinor": 2498000000,
+        "description": "Built floor 4."
+      },
+      {
+        "sequence": 5,
+        "timestampTicks": 0,
+        "category": "Construction.Floor",
+        "entityId": null,
+        "floor": 5,
+        "amountMinor": -500000,
+        "balanceAfterMinor": 2497500000,
+        "description": "Built floor 5."
+      },
+      {
+        "sequence": 6,
+        "timestampTicks": 0,
+        "category": "Construction.Floor",
+        "entityId": null,
+        "floor": 6,
+        "amountMinor": -500000,
+        "balanceAfterMinor": 2497000000,
+        "description": "Built floor 6."
+      },
+      {
+        "sequence": 7,
+        "timestampTicks": 0,
+        "category": "Construction.Room",
+        "entityId": 1,
+        "floor": 0,
+        "amountMinor": -1200000,
+        "balanceAfterMinor": 2495800000,
+        "description": "Built Entrance Lobby #1."
+      },
+      {
+        "sequence": 8,
+        "timestampTicks": 0,
+        "category": "Construction.Room",
+        "entityId": 2,
+        "floor": 6,
+        "amountMinor": -2200000,
+        "balanceAfterMinor": 2493600000,
+        "description": "Built Office #2."
+      },
+      {
+        "sequence": 9,
+        "timestampTicks": 0,
+        "category": "Construction.Room",
+        "entityId": 3,
+        "floor": 6,
+        "amountMinor": -2200000,
+        "balanceAfterMinor": 2491400000,
+        "description": "Built Office #3."
+      },
+      {
+        "sequence": 10,
+        "timestampTicks": 0,
+        "category": "Construction.Room",
+        "entityId": 4,
+        "floor": 6,
+        "amountMinor": -2200000,
+        "balanceAfterMinor": 2489200000,
+        "description": "Built Office #4."
+      },
+      {
+        "sequence": 11,
+        "timestampTicks": 0,
+        "category": "Transport.Construction",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": -8000000,
+        "balanceAfterMinor": 2481200000,
+        "description": "Installed elevator bank."
+      },
+      {
+        "sequence": 12,
+        "timestampTicks": 0,
+        "category": "Transport.Construction",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": -8000000,
+        "balanceAfterMinor": 2473200000,
+        "description": "Installed elevator bank."
+      }
+    ],
+    "clock": {
+      "currentTick": 353,
+      "firstSimulationSequence": 1
+    }
+  },
+  "transport": {
+    "schemaVersion": 1,
+    "currentTick": 353,
+    "topologyVersion": 3,
+    "observedWorldTopologyVersion": 10,
+    "banks": [
+      {
+        "definition": {
+          "id": 1,
+          "x": 26,
+          "minFloor": 0,
+          "maxFloor": 3,
+          "stops": [
+            0,
+            3
+          ],
+          "capacity": 2,
+          "travelTicksPerFloor": 4,
+          "doorTicks": 2,
+          "serviceOnly": false
+        },
+        "isOutOfService": false,
+        "car": {
+          "bankId": 1,
+          "state": "Traveling",
+          "floor": 3,
+          "targetFloor": 0,
+          "travelStartFloor": 3,
+          "direction": -1,
+          "timer": 9,
+          "duration": 12,
+          "passengers": []
+        }
+      },
+      {
+        "definition": {
+          "id": 2,
+          "x": 28,
+          "minFloor": 3,
+          "maxFloor": 6,
+          "stops": [
+            3,
+            6
+          ],
+          "capacity": 1,
+          "travelTicksPerFloor": 8,
+          "doorTicks": 2,
+          "serviceOnly": false
+        },
+        "isOutOfService": false,
+        "car": {
+          "bankId": 2,
+          "state": "Closing",
+          "floor": 3,
+          "targetFloor": 3,
+          "travelStartFloor": 3,
+          "direction": 1,
+          "timer": 2,
+          "duration": 2,
+          "passengers": [
+            1
+          ]
+        }
+      }
+    ],
+    "stairs": [],
+    "journeys": [
+      {
+        "personId": 1,
+        "state": "Riding",
+        "floor": 3,
+        "x": 28,
+        "destinationFloor": 6,
+        "destinationX": 0,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 0,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 3,
+        "remainingTicks": 0,
+        "legDuration": 2,
+        "waitSinceTick": 349,
+        "totalWaitTicks": 8,
+        "routeVersion": 3
+      },
+      {
+        "personId": 2,
+        "state": "Waiting",
+        "floor": 3,
+        "x": 28,
+        "destinationFloor": 6,
+        "destinationX": 0,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 0,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 3,
+        "remainingTicks": 0,
+        "legDuration": 2,
+        "waitSinceTick": 349,
+        "totalWaitTicks": 4,
+        "routeVersion": 3
+      },
+      {
+        "personId": 3,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 0,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 0,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 4,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 0,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 0,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 5,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 0,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 0,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 6,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 0,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 0,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 7,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 0,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 0,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 8,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 0,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 0,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 9,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 5,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 5,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 10,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 5,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 5,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 11,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 5,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 5,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 12,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 5,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 5,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 13,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 5,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 5,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 14,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 5,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 5,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 15,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 5,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 5,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 16,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 5,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 5,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 17,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 10,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 10,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 18,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 10,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 10,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 19,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 10,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 10,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 20,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 10,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 10,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 21,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 10,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 10,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 22,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 10,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 10,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 23,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 10,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 10,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      },
+      {
+        "personId": 24,
+        "state": "Waiting",
+        "floor": 0,
+        "x": 26,
+        "destinationFloor": 6,
+        "destinationX": 10,
+        "service": false,
+        "patienceTicks": 600,
+        "route": [
+          {
+            "kind": "Walk",
+            "fromFloor": 0,
+            "fromX": 0,
+            "toFloor": 0,
+            "toX": 26,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 0,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 26,
+            "bankId": 1
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 3,
+            "fromX": 26,
+            "toFloor": 3,
+            "toX": 28,
+            "bankId": 0
+          },
+          {
+            "kind": "Elevator",
+            "fromFloor": 3,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 28,
+            "bankId": 2
+          },
+          {
+            "kind": "Walk",
+            "fromFloor": 6,
+            "fromX": 28,
+            "toFloor": 6,
+            "toX": 10,
+            "bankId": 0
+          }
+        ],
+        "legIndex": 1,
+        "remainingTicks": 0,
+        "legDuration": 26,
+        "waitSinceTick": 326,
+        "totalWaitTicks": 0,
+        "routeVersion": 3
+      }
+    ],
+    "waitSamples": [
+      4,
+      4,
+      4
+    ],
+    "abandonedTrips": 0,
+    "occupiedCarTicks": 35,
+    "availableSeatTicks": 1059
+  },
+  "locationId": "tokyo",
+  "siteId": "central",
+  "sandbox": true,
+  "tick": 353,
+  "nextPersonId": 25,
+  "randomState": 20260930,
+  "reputation": 80,
+  "completedTrips": 0,
+  "peakPopulation": 24,
+  "todayRevenue": 0,
+  "todayExpenses": 0,
+  "todayArrivals": 24,
+  "todayDepartures": 0,
+  "todayAbandoned": 0,
+  "operations": [
+    {
+      "roomId": 1,
+      "priceMinor": 0,
+      "open": true,
+      "staff": 0,
+      "cleanliness": 99,
+      "condition": 99,
+      "dirty": false,
+      "reservationPersonId": null,
+      "contractActive": false,
+      "lastRentDay": -1,
+      "lastArrivalTick": -86400,
+      "condoSold": false,
+      "condoSaleMinor": 0,
+      "film": 0,
+      "nextEventTick": 0,
+      "eventPrepared": false,
+      "grossRevenueMinor": 0,
+      "costsMinor": 0
+    },
+    {
+      "roomId": 2,
+      "priceMinor": 85000,
+      "open": true,
+      "staff": 0,
+      "cleanliness": 99,
+      "condition": 99,
+      "dirty": false,
+      "reservationPersonId": null,
+      "contractActive": true,
+      "lastRentDay": -1,
+      "lastArrivalTick": 300,
+      "condoSold": false,
+      "condoSaleMinor": 0,
+      "film": 0,
+      "nextEventTick": 0,
+      "eventPrepared": false,
+      "grossRevenueMinor": 0,
+      "costsMinor": 0
+    },
+    {
+      "roomId": 3,
+      "priceMinor": 85000,
+      "open": true,
+      "staff": 0,
+      "cleanliness": 99,
+      "condition": 99,
+      "dirty": false,
+      "reservationPersonId": null,
+      "contractActive": true,
+      "lastRentDay": -1,
+      "lastArrivalTick": 300,
+      "condoSold": false,
+      "condoSaleMinor": 0,
+      "film": 0,
+      "nextEventTick": 0,
+      "eventPrepared": false,
+      "grossRevenueMinor": 0,
+      "costsMinor": 0
+    },
+    {
+      "roomId": 4,
+      "priceMinor": 85000,
+      "open": true,
+      "staff": 0,
+      "cleanliness": 99,
+      "condition": 99,
+      "dirty": false,
+      "reservationPersonId": null,
+      "contractActive": true,
+      "lastRentDay": -1,
+      "lastArrivalTick": 300,
+      "condoSold": false,
+      "condoSaleMinor": 0,
+      "film": 0,
+      "nextEventTick": 0,
+      "eventPrepared": false,
+      "grossRevenueMinor": 0,
+      "costsMinor": 0
+    }
+  ],
+  "people": [
+    {
+      "id": 1,
+      "roomId": 2,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 2,
+      "roomId": 2,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 3,
+      "roomId": 2,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 4,
+      "roomId": 2,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 5,
+      "roomId": 2,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 6,
+      "roomId": 2,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 7,
+      "roomId": 2,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 8,
+      "roomId": 2,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 9,
+      "roomId": 3,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 10,
+      "roomId": 3,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 11,
+      "roomId": 3,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 12,
+      "roomId": 3,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 13,
+      "roomId": 3,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 14,
+      "roomId": 3,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 15,
+      "roomId": 3,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 16,
+      "roomId": 3,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 17,
+      "roomId": 4,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 18,
+      "roomId": 4,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 19,
+      "roomId": 4,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 20,
+      "roomId": 4,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 21,
+      "roomId": 4,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 22,
+      "roomId": 4,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 23,
+      "roomId": 4,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    },
+    {
+      "id": 24,
+      "roomId": 4,
+      "role": "Worker",
+      "activity": "Arriving",
+      "actionAt": 36000,
+      "createdAt": 300,
+      "satisfaction": 75,
+      "serviceTargetId": null
+    }
+  ],
+  "reports": [],
+  "notices": [
+    {
+      "tick": 0,
+      "text": "Welcome. Build a ground lobby, connect upper floors, and keep facilities staffed and clean.",
+      "kind": "Tutorial"
+    }
+  ],
+  "finance": {
+    "billing": {
+      "lastSettledDay": 0,
+      "lastSettledTick": 0,
+      "nextDueTick": 57900
+    },
+    "currentPeriodFirstSequence": 1,
+    "periods": [],
+    "legacyThroughSequence": 0,
+    "pendingBatches": []
+  },
+  "management": {
+    "businesses": {
+      "nextTenantId": 4,
+      "nextFoodOrderId": 1,
+      "nextBookingId": 1,
+      "tenants": [
+        {
+          "id": 1,
+          "roomId": 2,
+          "kind": "Office",
+          "startDay": 1,
+          "renewalDay": 8,
+          "agreedRentMinor": 85000,
+          "memberIds": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8
+          ],
+          "lastArrivalDay": 1,
+          "lastPaidDay": 0,
+          "lastOccupiedDay": 0,
+          "lastReviewDay": 1,
+          "badDays": 0,
+          "status": "Active",
+          "departureReason": "",
+          "endedAtTick": 0
+        },
+        {
+          "id": 2,
+          "roomId": 3,
+          "kind": "Office",
+          "startDay": 1,
+          "renewalDay": 8,
+          "agreedRentMinor": 85000,
+          "memberIds": [
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            15,
+            16
+          ],
+          "lastArrivalDay": 1,
+          "lastPaidDay": 0,
+          "lastOccupiedDay": 0,
+          "lastReviewDay": 1,
+          "badDays": 0,
+          "status": "Active",
+          "departureReason": "",
+          "endedAtTick": 0
+        },
+        {
+          "id": 3,
+          "roomId": 4,
+          "kind": "Office",
+          "startDay": 1,
+          "renewalDay": 8,
+          "agreedRentMinor": 85000,
+          "memberIds": [
+            17,
+            18,
+            19,
+            20,
+            21,
+            22,
+            23,
+            24
+          ],
+          "lastArrivalDay": 1,
+          "lastPaidDay": 0,
+          "lastOccupiedDay": 0,
+          "lastReviewDay": 1,
+          "badDays": 0,
+          "status": "Active",
+          "departureReason": "",
+          "endedAtTick": 0
+        }
+      ],
+      "foodOrders": [],
+      "hotelBookings": []
+    },
+    "services": {
+      "nextTaskId": 1,
+      "tasks": []
+    },
+    "satisfaction": {
+      "nextComplaintId": 5,
+      "experiences": [
+        {
+          "roomId": 1,
+          "satisfaction": 80,
+          "lastTravelSeconds": 0,
+          "completionScore": 100
+        },
+        {
+          "roomId": 2,
+          "satisfaction": 80,
+          "lastTravelSeconds": 0,
+          "completionScore": 100
+        },
+        {
+          "roomId": 3,
+          "satisfaction": 80,
+          "lastTravelSeconds": 0,
+          "completionScore": 100
+        },
+        {
+          "roomId": 4,
+          "satisfaction": 80,
+          "lastTravelSeconds": 0,
+          "completionScore": 100
+        }
+      ],
+      "complaints": [
+        {
+          "id": 1,
+          "roomId": 1,
+          "code": "Security",
+          "message": "Security coverage is below peak demand.",
+          "createdTick": 300,
+          "resolvedTick": null
+        },
+        {
+          "id": 2,
+          "roomId": 2,
+          "code": "Security",
+          "message": "Security coverage is below peak demand.",
+          "createdTick": 300,
+          "resolvedTick": null
+        },
+        {
+          "id": 3,
+          "roomId": 3,
+          "code": "Security",
+          "message": "Security coverage is below peak demand.",
+          "createdTick": 300,
+          "resolvedTick": null
+        },
+        {
+          "id": 4,
+          "roomId": 4,
+          "code": "Security",
+          "message": "Security coverage is below peak demand.",
+          "createdTick": 300,
+          "resolvedTick": null
+        }
+      ],
+      "history": [
+        {
+          "tick": 300,
+          "score": 80
+        }
+      ]
+    },
+    "ownership": {
+      "nextOwnershipId": 1,
+      "legacyThroughOwnershipId": 0,
+      "contracts": []
+    },
+    "retail": {
+      "selections": [],
+      "demand": [
+        {
+          "model": "Food",
+          "lastAttemptTick": 0,
+          "nextAttemptTick": 0,
+          "attempts": 0
+        },
+        {
+          "model": "Shop",
+          "lastAttemptTick": 0,
+          "nextAttemptTick": 0,
+          "attempts": 0
+        }
+      ],
+      "legacyThroughOrderId": 0
+    }
+  }
+}

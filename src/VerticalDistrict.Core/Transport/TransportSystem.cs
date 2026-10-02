@@ -13,20 +13,21 @@ public sealed partial class TransportSystem
     private readonly List<StairDefinition> _stairs = [];
     private readonly SortedDictionary<long, Journey> _journeys = [];
     private readonly Queue<int> _waitSamples = [];
-    private readonly Dictionary<(int, int, int, int, bool), RouteLeg[]?> _routes = [];
+    private readonly Dictionary<(int, int, int, int, bool, bool, bool), RouteLeg[]?> _routes = [];
     private int _topologyVersion;
     private int _observedWorldVersion;
+    private int _routeWorldVersion;
     private long _abandoned;
     private long _occupiedCarTicks;
     private long _availableSeatTicks;
     public long CurrentTick { get; private set; }
     public int TopologyVersion => _topologyVersion;
     public IReadOnlyList<BankView> Banks => _banks.Values.Select(b => new BankView(Clone(b.Definition), b.OutOfService,
-        Waiting(b.Definition.Id).Count())).ToArray();
+        Waiting(b.Definition.Id).Count(), b.Cars.Count, b.Cars.Values.Count(car => !IsUnavailable(b, car)))).ToArray();
     public IReadOnlyList<StairDefinition> Stairs => _stairs.ToArray();
-    public IReadOnlyList<CarView> Cars => _banks.Values.Select(b => new CarView(b.Definition.Id, b.Car.State,
-        b.Car.Floor, DrawFloor(b.Car), b.Car.TargetFloor, b.Car.Direction, b.Car.Passengers.Count,
-        b.Definition.Capacity, b.Car.Passengers.ToArray())).ToArray();
+    public IReadOnlyList<CarView> Cars => _banks.Values.SelectMany(b => b.Cars.Values.Select(car => new CarView(b.Definition.Id, car.State,
+        car.Floor, DrawFloor(car), car.TargetFloor, car.Direction, car.Passengers.Count,
+        b.Definition.Capacity, car.Passengers.ToArray(), car.Id, car.Id, car.X, IsUnavailable(b, car)))).ToArray();
     public IReadOnlyList<JourneyView> Journeys => _journeys.Values.Select(View).ToArray();
     public JourneyView? JourneyFor(long personId) => _journeys.TryGetValue(personId, out var journey) ? View(journey) : null;
     public TransportMetrics Metrics
@@ -35,9 +36,10 @@ public sealed partial class TransportSystem
         {
             var samples = _waitSamples.Order().ToArray();
             var queued = _journeys.Values.Where(j => j.State == JourneyState.Waiting).ToArray();
-            var overloaded = queued.GroupBy(j => j.Floor).Where(g => g.Count() > _banks.Values
-                .Where(b => !b.OutOfService && b.Definition.Stops.Contains(g.Key)).Sum(b => b.Definition.Capacity))
-                .Select(g => g.Key).Order().ToArray();
+            var overloaded = queued.GroupBy(j => (BankId: j.CurrentLeg!.BankId, j.Floor))
+                .Where(g => g.Count() > (_banks.TryGetValue(g.Key.BankId, out var bank)
+                    ? bank.Cars.Values.Count(car => !IsUnavailable(bank, car)) * bank.Definition.Capacity : 0))
+                .Select(g => g.Key.Floor).Distinct().Order().ToArray();
             return new TransportMetrics(samples.Length == 0 ? 0 : samples.Average(),
                 samples.Length == 0 ? 0 : samples[(int)Math.Ceiling(samples.Length * .95) - 1], samples.Length,
                 _abandoned, _availableSeatTicks == 0 ? 0 : (double)_occupiedCarTicks / _availableSeatTicks,
@@ -49,6 +51,7 @@ public sealed partial class TransportSystem
     {
         _world = world ?? throw new ArgumentNullException(nameof(world));
         _observedWorldVersion = world.TopologyVersion;
+        _routeWorldVersion = world.TopologyVersion;
     }
 
     public CommandResult ValidateBank(BankDefinition definition, int? replacingId = null)
@@ -63,14 +66,21 @@ public sealed partial class TransportSystem
             || definition.Stops.Any(s => s < definition.MinFloor || s > definition.MaxFloor))
             return Fail("Select at least two unique stops within the shaft.");
         if (_banks.ContainsKey(definition.Id) && replacingId != definition.Id) return Fail("Bank ID already exists.");
-        for (var floor = definition.MinFloor; floor <= definition.MaxFloor; floor++)
-            if (!_world.Floors.Contains(floor) || HasRoom(definition.X, floor))
-                return Fail($"Shaft requires an empty supported bay on floor {floor}.");
-        if (_banks.Values.Any(b => b.Definition.Id != replacingId && b.Definition.X == definition.X
-            && b.Definition.MinFloor <= definition.MaxFloor && b.Definition.MaxFloor >= definition.MinFloor))
-            return Fail("Shafts may not overlap.");
-        if (_stairs.Any(s => s.X == definition.X && s.LowerFloor <= definition.MaxFloor && s.LowerFloor + 1 >= definition.MinFloor))
-            return Fail("Shaft overlaps a staircase.");
+        var shafts = ShaftDefinitions(definition);
+        if (shafts.Length > ConstructionWorld.Width || shafts.Any(s => s == null || s.Id <= 0 || s.X is < 0 or >= ConstructionWorld.Width)
+            || shafts.Select(s => s.Id).Distinct().Count() != shafts.Length || shafts.Select(s => s.X).Distinct().Count() != shafts.Length)
+            return Fail("Each coordinated car requires a unique positive shaft/car ID and its own building bay; ID 1 is the primary shaft.");
+        foreach (var shaft in shafts)
+        {
+            for (var floor = definition.MinFloor; floor <= definition.MaxFloor; floor++)
+                if (!_world.Floors.Contains(floor) || HasRoom(shaft.X, floor))
+                    return Fail($"Shaft {shaft.Id} requires an empty supported bay on floor {floor}.");
+            if (_banks.Values.Any(b => b.Definition.Id != replacingId && ShaftDefinitions(b.Definition).Any(s => s.X == shaft.X)
+                && b.Definition.MinFloor <= definition.MaxFloor && b.Definition.MaxFloor >= definition.MinFloor))
+                return Fail("Shafts may not overlap.");
+            if (_stairs.Any(s => s.X == shaft.X && s.LowerFloor <= definition.MaxFloor && s.LowerFloor + 1 >= definition.MinFloor))
+                return Fail("Shaft overlaps a staircase or escalator.");
+        }
         return Ok("Elevator bank is valid.");
     }
 
@@ -91,10 +101,11 @@ public sealed partial class TransportSystem
         if (!_banks.TryGetValue(definition.Id, out var bank)) return Fail("Bank does not exist.");
         var valid = ValidateBank(definition, definition.Id);
         if (!valid.Success) return valid;
-        if (bank.Car.Passengers.Count != 0 || bank.Car.State == CarState.Traveling)
-            return Fail("Wait for the car to stop and unload before changing its configuration.");
+        if (bank.Cars.Values.Any(car => car.Passengers.Count != 0 || car.State == CarState.Traveling))
+            return Fail("Wait for every car in the bank to stop and unload before changing its configuration.");
         if (definition.X != bank.Definition.X || definition.MinFloor != bank.Definition.MinFloor
-            || definition.MaxFloor != bank.Definition.MaxFloor) return Fail("Rebuild the bank to change shaft geometry.");
+            || definition.MaxFloor != bank.Definition.MaxFloor || !ShaftDefinitions(definition).OrderBy(s => s.Id).SequenceEqual(ShaftDefinitions(bank.Definition).OrderBy(s => s.Id)))
+            return Fail("Use the car controls to add or remove a shaft; rebuild the bank to change its primary geometry.");
         bank.Definition = Clone(definition);
         Changed();
         return Ok("Elevator stops and service policy updated.");
@@ -103,16 +114,10 @@ public sealed partial class TransportSystem
     public CommandResult RemoveBank(int bankId, bool recover = false)
     {
         if (!_banks.TryGetValue(bankId, out var bank)) return Fail("Bank does not exist.");
-        if (bank.Car.State == CarState.Traveling) return Fail("Wait for the car to reach a floor before removing the shaft.");
-        if (!recover && (bank.Car.Passengers.Count != 0 || Waiting(bankId).Any()))
+        if (bank.Cars.Values.Any(car => car.State == CarState.Traveling)) return Fail("Wait for every car to reach a floor before removing the bank.");
+        if (!recover && (bank.Cars.Values.Any(car => car.Passengers.Count != 0) || AssignedOrWaiting(bankId).Any()))
             return Fail("Bank has passengers; recover them explicitly before removing it.");
-        foreach (var id in bank.Car.Passengers.ToArray())
-        {
-            var journey = _journeys[id];
-            journey.Floor = bank.Car.Floor;
-            journey.X = bank.Definition.X;
-            journey.State = JourneyState.Unreachable;
-        }
+        foreach (var car in bank.Cars.Values) Evacuate(bank, car);
         _banks.Remove(bankId);
         Changed();
         return Ok("Elevator bank removed; affected passengers will find another route.");
@@ -131,7 +136,7 @@ public sealed partial class TransportSystem
             || lowerFloor >= ConstructionWorld.MaxFloor || !_world.Floors.Contains(lowerFloor)
             || !_world.Floors.Contains(lowerFloor + 1)) return Fail("Stairs and escalators need two adjacent floor slabs.");
         if (HasRoom(x, lowerFloor) || HasRoom(x, lowerFloor + 1)
-            || _banks.Values.Any(b => b.Definition.X == x && b.Definition.MinFloor <= lowerFloor + 1 && b.Definition.MaxFloor >= lowerFloor)
+            || _banks.Values.Any(b => ShaftDefinitions(b.Definition).Any(s => s.X == x) && b.Definition.MinFloor <= lowerFloor + 1 && b.Definition.MaxFloor >= lowerFloor)
             || _stairs.Any(s => s.X == x && s.LowerFloor == lowerFloor))
             return Fail("Stair and escalator bays must be free of rooms and transport structures.");
         var description = direction == 0 ? "Built staircase." : direction == 1 ? "Built upward escalator." : "Built downward escalator.";
@@ -154,14 +159,24 @@ public sealed partial class TransportSystem
         return Ok(stair.Direction == 0 ? "Staircase removed." : "Escalator removed.");
     }
 
-    public bool Occupies(int x, int floor) => _banks.Values.Any(b => b.Definition.X == x
+    public bool Occupies(int x, int floor) => _banks.Values.Any(b => ShaftDefinitions(b.Definition).Any(s => s.X == x)
         && floor >= b.Definition.MinFloor && floor <= b.Definition.MaxFloor)
         || _stairs.Any(s => s.X == x && (s.LowerFloor == floor || s.LowerFloor + 1 == floor));
 
     public bool CanReach(int fromFloor, int fromX, int toFloor, int toX, bool service = false)
     {
-        ObserveWorld();
         return EndpointsValid(fromFloor, fromX, toFloor, toX) && FindRoute(fromFloor, fromX, toFloor, toX, service) is not null;
+    }
+
+    public RouteDiagnostic DiagnoseRoute(int fromFloor, int fromX, int toFloor, int toX, bool service = false)
+    {
+        if (FindRoute(fromFloor, fromX, toFloor, toX, service) is { } route)
+            return new(RouteStatus.Reachable, "A permitted operational route is connected; actual queues and capacity still apply.", route.ToArray());
+        if (FindRoute(fromFloor, fromX, toFloor, toX, service, ignoreAvailability: true) != null)
+            return new(RouteStatus.TemporarilyUnavailable, "The permitted route requires a bank whose cars are currently unavailable.", []);
+        if (FindRoute(fromFloor, fromX, toFloor, toX, service, ignoreAvailability: true, ignorePermissions: true) != null)
+            return new(RouteStatus.AccessDenied, "A connected route exists only through service-restricted elevators.", []);
+        return new(RouteStatus.Disconnected, "No connected route joins these endpoints through the configured stops and supported corridors.", []);
     }
 
     public CommandResult RequestJourney(long personId, int fromFloor, int fromX, int toFloor, int toX,
@@ -189,6 +204,7 @@ public sealed partial class TransportSystem
         if (journey.State == JourneyState.Walking && journey.CurrentLeg is { } walk)
             journey.X = walk.FromX + Math.Sign(walk.ToX - walk.FromX) * (journey.LegDuration - journey.RemainingTicks);
         journey.State = JourneyState.Abandoned;
+        journey.AssignedCarId = null;
         _abandoned++;
         return Ok("Journey cancelled.");
     }
@@ -208,13 +224,8 @@ public sealed partial class TransportSystem
         if (!_banks.TryGetValue(bankId, out var bank)) return Fail("Bank does not exist.");
         if (bank.OutOfService == outOfService) return Ok("Service state already matches.");
         bank.OutOfService = outOfService;
-        if (outOfService && bank.Car.State != CarState.Traveling)
-        {
-            Evacuate(bank);
-            bank.Car.State = CarState.OutOfService;
-            bank.Car.Timer = 0;
-        }
-        else if (!outOfService && bank.Car.State == CarState.OutOfService) bank.Car.State = CarState.Idle;
+        foreach (var car in bank.Cars.Values) ApplyCarAvailability(bank, car);
+        if (!outOfService && bank.Cars.Values.Any(car => !IsUnavailable(bank, car))) ReleaseWaitingAssignments(bank);
         Changed();
         return Ok(outOfService ? "Bank disabled; moving car will unload safely at its next stop." : "Bank repaired and available.");
     }
@@ -234,6 +245,7 @@ public sealed partial class TransportSystem
                 {
                     journey.TotalWaitTicks += (int)(CurrentTick - journey.WaitSinceTick);
                     journey.State = JourneyState.Abandoned;
+                    journey.AssignedCarId = null;
                     _abandoned++;
                 }
             }
@@ -243,30 +255,40 @@ public sealed partial class TransportSystem
                 journey.Floor = leg.ToFloor;
                 journey.X = leg.ToX;
                 journey.LegIndex++;
-                if (journey.RouteVersion != _topologyVersion) Replan(journey); else BeginLeg(journey);
+                if (journey.RouteVersion != _topologyVersion)
+                {
+                    // At the reached shaft, retain the committed hall request and its age
+                    // before validating it against topology changes made during the walk.
+                    if (journey.AssignedCarId != null && journey.CurrentLeg is { Kind: RouteKind.Elevator }) BeginLeg(journey);
+                    Replan(journey);
+                }
+                else BeginLeg(journey);
             }
         }
         foreach (var bank in _banks.Values)
         {
-            TickCar(bank);
-            if (!bank.OutOfService)
+            AssignHallCalls(bank);
+            foreach (var car in bank.Cars.Values)
             {
-                _occupiedCarTicks = checked(_occupiedCarTicks + bank.Car.Passengers.Count);
-                _availableSeatTicks = checked(_availableSeatTicks + bank.Definition.Capacity);
+                TickCar(bank, car);
+                if (!IsUnavailable(bank, car))
+                {
+                    _occupiedCarTicks = checked(_occupiedCarTicks + car.Passengers.Count);
+                    _availableSeatTicks = checked(_availableSeatTicks + bank.Definition.Capacity);
+                }
             }
         }
     }
 
-    private void TickCar(Bank bank)
+    private void TickCar(Bank bank, Car car)
     {
-        var car = bank.Car;
         if (car.Timer > 0 && --car.Timer > 0) return;
         switch (car.State)
         {
-            case CarState.Idle: Dispatch(bank); break;
+            case CarState.Idle: Dispatch(bank, car); break;
             case CarState.Traveling:
                 car.Floor = car.TargetFloor;
-                if (bank.OutOfService) { Evacuate(bank); car.State = CarState.OutOfService; }
+                if (IsUnavailable(bank, car)) { Evacuate(bank, car); car.State = CarState.OutOfService; }
                 else Phase(car, CarState.Opening, bank.Definition.DoorTicks);
                 break;
             case CarState.Opening: Phase(car, CarState.Unloading, 1); break;
@@ -277,18 +299,20 @@ public sealed partial class TransportSystem
                     if (journey.CurrentLeg!.ToFloor != car.Floor) continue;
                     car.Passengers.Remove(id);
                     journey.Floor = car.Floor;
-                    journey.X = bank.Definition.X;
+                    journey.X = car.X;
                     journey.LegIndex++;
+                    journey.AssignedCarId = null;
+                    journey.CompletedRides = checked(journey.CompletedRides + 1);
                     if (journey.RouteVersion != _topologyVersion) Replan(journey); else BeginLeg(journey);
                 }
                 Phase(car, CarState.Boarding, 1);
                 break;
             case CarState.Boarding:
-                var queue = Waiting(bank.Definition.Id).Where(j => j.Floor == car.Floor)
+                var queue = Waiting(bank.Definition.Id, car.Id).Where(j => j.Floor == car.Floor && j.X == car.X)
                     .OrderBy(j => j.WaitSinceTick).ThenBy(j => j.PersonId).ToArray();
                 // Recheck oldest-call ownership after alighting. A continuous stream at terminal
                 // floors must not refill an empty car forever while an older intermediate call waits.
-                if (car.Passengers.Count == 0 && Waiting(bank.Definition.Id)
+                if (car.Passengers.Count == 0 && Waiting(bank.Definition.Id, car.Id)
                     .OrderBy(j => j.WaitSinceTick).ThenBy(j => j.PersonId).FirstOrDefault() is { } oldest
                     && oldest.Floor != car.Floor) queue = [];
                 if (car.Passengers.Count == 0 && queue.Length > 0)
@@ -306,15 +330,14 @@ public sealed partial class TransportSystem
                 }
                 Phase(car, CarState.Closing, bank.Definition.DoorTicks);
                 break;
-            case CarState.Closing: car.State = CarState.Idle; Dispatch(bank); break;
+            case CarState.Closing: car.State = CarState.Idle; Dispatch(bank, car); break;
             case CarState.OutOfService: break;
         }
     }
 
-    private void Dispatch(Bank bank)
+    private void Dispatch(Bank bank, Car car)
     {
-        var car = bank.Car;
-        if (bank.OutOfService) { car.State = CarState.OutOfService; return; }
+        if (IsUnavailable(bank, car)) { car.State = CarState.OutOfService; return; }
         int target;
         if (car.Passengers.Count != 0)
         {
@@ -323,7 +346,7 @@ public sealed partial class TransportSystem
             car.Direction = Math.Sign(target - car.Floor);
             if (car.Passengers.Count < bank.Definition.Capacity)
             {
-                var pickup = Waiting(bank.Definition.Id).Where(j => j.Floor != car.Floor
+                var pickup = Waiting(bank.Definition.Id, car.Id).Where(j => j.Floor != car.Floor
                     && Math.Sign(j.Floor - car.Floor) == car.Direction && Math.Abs(j.Floor - car.Floor) < Math.Abs(target - car.Floor)
                     && Math.Sign(j.CurrentLeg!.ToFloor - j.Floor) == car.Direction)
                     .OrderBy(j => Math.Abs(j.Floor - car.Floor)).ThenBy(j => j.PersonId).FirstOrDefault();
@@ -332,10 +355,12 @@ public sealed partial class TransportSystem
         }
         else
         {
-            var oldest = Waiting(bank.Definition.Id).OrderBy(j => j.WaitSinceTick).ThenBy(j => j.PersonId).FirstOrDefault();
+            var oldest = AssignedOrWaiting(bank.Definition.Id).Where(j => j.AssignedCarId == car.Id)
+                .OrderBy(j => j.WaitSinceTick).ThenBy(j => j.PersonId).FirstOrDefault();
             if (oldest is null) { car.Direction = 0; return; }
             target = oldest.Floor;
-            car.Direction = target == car.Floor ? Math.Sign(oldest.CurrentLeg!.ToFloor - car.Floor) : Math.Sign(target - car.Floor);
+            car.Direction = target == car.Floor ? Math.Sign(HallJourneyLeg(oldest)!.ToFloor - car.Floor) : Math.Sign(target - car.Floor);
+            if (target == car.Floor && oldest.State != JourneyState.Waiting) return;
         }
         car.TargetFloor = target;
         if (target == car.Floor) Phase(car, CarState.Opening, bank.Definition.DoorTicks);
@@ -346,23 +371,41 @@ public sealed partial class TransportSystem
         }
     }
 
-    private void Evacuate(Bank bank)
+    private void Evacuate(Bank bank, Car car)
     {
-        foreach (var id in bank.Car.Passengers.ToArray())
+        foreach (var id in car.Passengers.ToArray())
         {
             var journey = _journeys[id];
-            journey.Floor = bank.Car.Floor;
-            journey.X = bank.Definition.X;
+            journey.Floor = car.Floor;
+            journey.X = car.X;
             journey.State = JourneyState.Unreachable;
+            journey.AssignedCarId = null;
             journey.RouteVersion = -1;
         }
-        bank.Car.Passengers.Clear();
+        car.Passengers.Clear();
     }
 
     private void Replan(Journey journey)
     {
         var previousWait = journey.State == JourneyState.Waiting ? journey.WaitSinceTick : -1;
         var previousLeg = journey.State == JourneyState.Waiting ? journey.CurrentLeg : null;
+        // Keep a still-valid hall assignment and its original queue age across unrelated
+        // construction. Only the onward route is refreshed, so inspection or congestion
+        // cannot send a waiting person oscillating between shafts.
+        if (previousLeg is { Kind: RouteKind.Elevator } queuedLeg
+            && _banks.TryGetValue(queuedLeg.BankId, out var queuedBank)
+            && queuedBank.Definition.Stops.Contains(queuedLeg.FromFloor) && queuedBank.Definition.Stops.Contains(queuedLeg.ToFloor)
+            && (journey.Service || !queuedBank.Definition.ServiceOnly)
+            && queuedBank.Cars.Values.Any(car => !IsUnavailable(queuedBank, car))
+            && FindRoute(queuedLeg.ToFloor, queuedLeg.ToX, journey.DestinationFloor, journey.DestinationX, journey.Service) is { } onward)
+        {
+            if (journey.AssignedCarId is { } assigned && (!queuedBank.Cars.TryGetValue(assigned, out var queuedCar)
+                || IsUnavailable(queuedBank, queuedCar) || queuedCar.X != queuedLeg.FromX))
+            { journey.AssignedCarId = null; queuedLeg = queuedLeg with { CarId = 0 }; }
+            journey.Route = [queuedLeg, .. onward]; journey.LegIndex = 0; journey.RouteVersion = _topologyVersion;
+            return;
+        }
+        journey.AssignedCarId = null;
         var route = FindRoute(journey.Floor, journey.X, journey.DestinationFloor, journey.DestinationX, journey.Service);
         journey.Route = route ?? [];
         journey.LegIndex = 0;
@@ -376,7 +419,8 @@ public sealed partial class TransportSystem
         BeginLeg(journey);
         if (previousWait >= 0)
         {
-            if (journey.State == JourneyState.Waiting && journey.CurrentLeg == previousLeg)
+            if (journey.State == JourneyState.Waiting && journey.CurrentLeg is { } current && previousLeg is { } prior
+                && current.BankId == prior.BankId && current.FromFloor == prior.FromFloor && current.ToFloor == prior.ToFloor)
                 journey.WaitSinceTick = previousWait;
             else journey.TotalWaitTicks += checked((int)(CurrentTick - previousWait));
         }
@@ -384,12 +428,12 @@ public sealed partial class TransportSystem
 
     private void BeginLeg(Journey journey)
     {
-        if (journey.LegIndex >= journey.Route.Length) { journey.State = JourneyState.Arrived; return; }
+        if (journey.LegIndex >= journey.Route.Length) { journey.State = JourneyState.Arrived; journey.AssignedCarId = null; return; }
         var leg = journey.CurrentLeg!;
         if (leg.Kind == RouteKind.Elevator)
         {
             journey.State = JourneyState.Waiting;
-            journey.WaitSinceTick = CurrentTick;
+            if (journey.AssignedCarId == null) journey.WaitSinceTick = CurrentTick;
             journey.RemainingTicks = 0;
         }
         else
@@ -400,15 +444,24 @@ public sealed partial class TransportSystem
         }
     }
 
-    private RouteLeg[]? FindRoute(int fromFloor, int fromX, int toFloor, int toX, bool service)
+    private RouteLeg[]? FindRoute(int fromFloor, int fromX, int toFloor, int toX, bool service,
+        bool ignoreAvailability = false, bool ignorePermissions = false)
     {
-        var key = (fromFloor, fromX, toFloor, toX, service);
+        // Inspection uses current construction without advancing the serialized simulation
+        // topology. Only this derived cache may change until a command or Step observes it.
+        if (_routeWorldVersion != _world.TopologyVersion)
+        {
+            _routeWorldVersion = _world.TopologyVersion;
+            _routes.Clear();
+        }
+        var key = (fromFloor, fromX, toFloor, toX, service, ignoreAvailability, ignorePermissions);
         if (_routes.TryGetValue(key, out var cached)) return cached;
         if (!EndpointsValid(fromFloor, fromX, toFloor, toX)) return null;
         var start = (Floor: fromFloor, X: fromX);
         var goal = (Floor: toFloor, X: toX);
         var points = new HashSet<(int Floor, int X)> { start, goal };
-        var usable = _banks.Values.Where(b => !b.OutOfService && (service || !b.Definition.ServiceOnly)).ToArray();
+        var usable = _banks.Values.Where(b => (ignoreAvailability || b.Cars.Values.Any(car => !IsUnavailable(b, car)))
+            && (ignorePermissions || service || !b.Definition.ServiceOnly)).ToArray();
         foreach (var bank in usable) foreach (var floor in bank.Definition.Stops) points.Add((floor, bank.Definition.X));
         foreach (var stair in _stairs) { points.Add((stair.LowerFloor, stair.X)); points.Add((stair.LowerFloor + 1, stair.X)); }
         var byFloor = points.GroupBy(p => p.Floor).ToDictionary(g => g.Key, g => g.OrderBy(p => p.X).ToArray());
@@ -460,23 +513,26 @@ public sealed partial class TransportSystem
     {
         double floor = journey.Floor, x = journey.X;
         int? bankId = null;
-        if (journey.State == JourneyState.Riding && journey.CurrentLeg is { } ride && _banks.TryGetValue(ride.BankId, out var bank))
-        { floor = DrawFloor(bank.Car); x = bank.Definition.X; bankId = ride.BankId; }
+        if (journey.State == JourneyState.Riding && journey.CurrentLeg is { } ride && _banks.TryGetValue(ride.BankId, out var bank)
+            && journey.AssignedCarId is { } carId && bank.Cars.TryGetValue(carId, out var car))
+        { floor = DrawFloor(car); x = car.X; bankId = ride.BankId; }
         else if (journey.State == JourneyState.Walking && journey.CurrentLeg is { } walk)
         {
             var progress = 1d - (double)journey.RemainingTicks / Math.Max(1, journey.LegDuration);
             floor += (walk.ToFloor - walk.FromFloor) * progress;
             x += (walk.ToX - walk.FromX) * progress;
         }
-        else if (journey.State == JourneyState.Waiting) bankId = journey.CurrentLeg?.BankId;
+        if (journey.State == JourneyState.Waiting || journey.AssignedCarId != null && journey.State == JourneyState.Walking) bankId = HallJourneyLeg(journey)?.BankId;
         var queuedOrRiding = journey.State is JourneyState.Waiting or JourneyState.Riding;
         return new JourneyView(journey.PersonId, journey.State, journey.Floor, floor, x,
             journey.DestinationFloor, journey.DestinationX, bankId,
             journey.State == JourneyState.Waiting ? journey.WaitSinceTick : 0, journey.TotalWaitTicks, journey.Service,
-            queuedOrRiding ? journey.CurrentLeg?.ToFloor : null, journey.PatienceTicks);
+            queuedOrRiding ? journey.CurrentLeg?.ToFloor : null, journey.PatienceTicks, journey.AssignedCarId,
+            Math.Max(0, journey.CompletedRides - 1), journey.Route.Skip(journey.LegIndex).ToArray());
     }
 
-    private IEnumerable<Journey> Waiting(int bankId) => _journeys.Values.Where(j => j.State == JourneyState.Waiting && j.CurrentLeg?.BankId == bankId);
+    private IEnumerable<Journey> Waiting(int bankId, int? carId = null) => _journeys.Values.Where(j => j.State == JourneyState.Waiting
+        && j.CurrentLeg?.BankId == bankId && (!carId.HasValue || j.AssignedCarId == carId));
     private bool EndpointsValid(int ff, int fx, int tf, int tx) => _world.Floors.Contains(ff) && _world.Floors.Contains(tf)
         && fx is >= 0 and < ConstructionWorld.Width && tx is >= 0 and < ConstructionWorld.Width;
     private bool HasRoom(int x, int floor) => _world.Rooms.Any(r => x >= r.X && x < r.X + _world.Catalog.Get(r.DefinitionId).Width
@@ -493,7 +549,8 @@ public sealed partial class TransportSystem
     private static void Phase(Car car, CarState state, int ticks) { car.State = state; car.Timer = ticks; car.Duration = ticks; }
     private static double DrawFloor(Car car) => car.State == CarState.Traveling
         ? car.TravelStartFloor + (car.TargetFloor - car.TravelStartFloor) * (1d - (double)car.Timer / car.Duration) : car.Floor;
-    private static BankDefinition Clone(BankDefinition bank) => bank with { Stops = bank.Stops.Order().ToArray() };
+    private static BankDefinition Clone(BankDefinition bank) => bank with { Stops = bank.Stops.Order().ToArray(),
+        AdditionalShafts = (bank.AdditionalShafts ?? []).OrderBy(s => s.Id).ToArray() };
     private static CommandResult Ok(string message) => new(true, message);
     private static CommandResult Fail(string message) => new(false, message);
 
@@ -501,10 +558,13 @@ public sealed partial class TransportSystem
     {
         public BankDefinition Definition = definition;
         public bool OutOfService;
-        public readonly Car Car = new(definition.Stops.Min());
+        public readonly SortedDictionary<int, Car> Cars = new(ShaftDefinitions(definition).ToDictionary(s => s.Id, s => new Car(s.Id, s.X, definition.Stops.Min())));
+        public Car Car => Cars[1];
     }
-    private sealed class Car(int floor)
+    private sealed class Car(int id, int x, int floor)
     {
+        public readonly int Id = id, X = x;
+        public bool OutOfService;
         public CarState State;
         public int Floor = floor, TargetFloor = floor, TravelStartFloor = floor, Direction, Timer, Duration;
         public readonly List<long> Passengers = [];
@@ -517,6 +577,8 @@ public sealed partial class TransportSystem
         public JourneyState State;
         public int Floor = floor, X = x, LegIndex, RemainingTicks, LegDuration, TotalWaitTicks, RouteVersion;
         public long WaitSinceTick;
+        public int? AssignedCarId;
+        public int CompletedRides;
         public RouteLeg[] Route = [];
         public RouteLeg? CurrentLeg => LegIndex < Route.Length ? Route[LegIndex] : null;
     }

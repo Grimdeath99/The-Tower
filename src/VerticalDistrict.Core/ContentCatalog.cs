@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace VerticalDistrict.Core;
 
-/// <summary>Immutable construction definitions. Planned operations do not run in this milestone.</summary>
+/// <summary>Immutable facility definitions; runtime balance is loaded separately by SimulationRules.</summary>
 public sealed record FacilityDefinition(
     string Id, string Name, string Category, int Width, int Height,
     long CostMinor, int MinimumRank, string ColorHex, string Description,
@@ -49,6 +49,13 @@ public sealed class ContentCatalog
 
     public RankDefinition GetRank(int rank) => rank is >= 1 and <= 7
         ? Ranks[rank - 1] : throw new ArgumentOutOfRangeException(nameof(rank), "Rank must be between 1 and 7.");
+
+    internal static bool IsSupportedOperatingModel(string? model) => model is
+        "Office" or "Home" or "Hotel" or "Food" or "Shop" or "Cinema" or "Event" or "Condo"
+        or "Advertising" or "Parking" or "Service" or "Utility" or "Security" or "Public" or "Terminal";
+
+    internal static bool RequiresOccupantCapacity(string? model) => model is
+        "Office" or "Home" or "Hotel" or "Food" or "Shop" or "Cinema" or "Event" or "Condo" or "Parking" or "Terminal";
 
     public static ContentCatalog Load(string json)
     {
@@ -109,9 +116,14 @@ public sealed class ContentCatalog
             Require(!string.IsNullOrWhiteSpace(operation.Model) && !string.IsNullOrWhiteSpace(operation.OpeningHours)
                 && !string.IsNullOrWhiteSpace(operation.AccessRule) && !string.IsNullOrWhiteSpace(operation.PricingNotes),
                 $"{label}: operating model, opening hours, access rule, and pricing notes are required.");
+            Require(IsSupportedOperatingModel(operation.Model), $"{label}: unsupported operating model '{operation.Model}'. Add its runtime implementation before registering content.");
             Require(operation.DailyUpkeepMinor >= 0 && operation.Capacity >= 0 && operation.StaffRequired >= 0
                 && operation.Noise is >= 0 and <= 100, $"{label}: invalid planned operating ranges.");
+            Require(!RequiresOccupantCapacity(operation.Model) || operation.Capacity > 0,
+                $"{label}: operating model '{operation.Model}' requires positive capacity.");
             Require(operation.Utilities is not null && operation.Utilities.All(x => !string.IsNullOrWhiteSpace(x)), $"{label}: utilities must be a list of nonempty names.");
+            Require(operation.Utilities!.Distinct(StringComparer.OrdinalIgnoreCase).Count() == operation.Utilities!.Length,
+                $"{label}: utility references must be unique.");
             var planned = new PlannedOperations(operation.Model!, operation.Status!, operation.DailyUpkeepMinor,
                 operation.Capacity, operation.StaffRequired, Array.AsReadOnly(operation.Utilities!.ToArray()),
                 operation.OpeningHours!, operation.AccessRule!, operation.Noise, operation.PricingNotes!);

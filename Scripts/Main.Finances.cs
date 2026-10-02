@@ -94,7 +94,7 @@ public partial class Main
         "Sales.Cinema" => "Cinema admissions", "Sales.Event" => "Event admissions", "Parking.Departure" => "Parking stays",
         "Advertising.Contract" => "Advertising contracts", "Operations.Upkeep" => "Upkeep and wages (imported)",
         "Operations.FacilityUpkeep" => "Facility upkeep", "Operations.Wages" => "Staff wages",
-        "Maintenance.Repair" => "Cleaning and maintenance", "Event.Preparation" => "Event preparation",
+        "Maintenance.Repair" => "Maintenance repairs", "Maintenance.Cleaning" => "Cleaning supplies", "Event.Preparation" => "Event preparation",
         "Billing.Settlement" => "Daily settlement", _ => category
     };
 

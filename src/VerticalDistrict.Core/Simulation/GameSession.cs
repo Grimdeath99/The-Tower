@@ -29,6 +29,7 @@ public sealed partial class GameSession
     public int CompletedTrips { get; private set; }
     public int PeakPopulation { get; private set; }
     public int Population => _people.Values.Count(p => p.Role != "Staff");
+    public int PhysicalPopulation => _people.Count;
     public int Satisfaction => Reputation;
     public int Cleanliness => _operations.Count == 0 ? 100 : (int)_operations.Values.Average(r => r.Cleanliness);
     public bool Insolvent => World.CashMinor < -10_000_000;
@@ -50,7 +51,7 @@ public sealed partial class GameSession
         Notice("Welcome. Build a ground lobby, connect upper floors, and keep facilities staffed and clean.", "Tutorial");
     }
     public RoomOperation? OperationFor(long id) => _operations.GetValueOrDefault(id);
-    public int Occupancy(long roomId) => _people.Values.Count(p => p.RoomId == roomId && p.Role != "Staff" && p.Activity == PersonActivity.Visiting);
+    public int Occupancy(long roomId) => _people.Values.Count(p => p.RoomId == roomId && p.Role != "Staff" && p.Activity is PersonActivity.Visiting or PersonActivity.WaitingForService or PersonActivity.BeingServed);
     public int ReservedCapacity(long roomId) => _people.Values.Count(p => p.RoomId == roomId && p.Role != "Staff" && p.Activity is not (PersonActivity.Leaving or PersonActivity.Stranded));
     private RoomInstance? Room(long id) => World.Rooms.FirstOrDefault(r => r.Id == id);
     private RoomInstance? Entrance => World.Rooms.FirstOrDefault(r => r.DefinitionId == "lobby" && r.Floor == 0 && _operations.GetValueOrDefault(r.Id)?.Open == true);
@@ -90,12 +91,15 @@ public sealed partial class GameSession
                 _operations.Add(room.Id, new RoomOperation(room.Id, rule.PriceMinor, true, rule.Staff, 100, 100,
                     false, null, false, -1, -86400, false, 0, 0, 0, false, 0, 0));
         foreach (var id in _operations.Keys.Where(id => Room(id) == null).ToArray()) _operations.Remove(id);
+        SynchronizeSatisfaction();
     }
     public void Step()
     {
         Tick = checked(Tick + 1);
         World.SetSimulationClock(Tick);
         Transport.Step(Tick);
+        ResolveServiceWorkers();
+        UpdateCommerce();
         ResolvePeople();
         if (Tick % 60 == 0)
         {
@@ -105,6 +109,7 @@ public sealed partial class GameSession
             PeakPopulation = Math.Max(PeakPopulation, Population);
         }
         if ((Tick + 28500) % 3600 == 0) HourlyCondition();
+        if (Tick % 60 == 0) UpdateSatisfaction();
         if (Tick >= _billing.NextDueTick) CloseDay();
         if (Tick % 3600 == 0) EvaluatePromotion();
     }

@@ -13,10 +13,18 @@ public sealed record PersonInspection(PersonState Person, JourneyView Journey, i
 
 public sealed record HallCallInspection(int Floor, int Direction, int WaitingCount, long OldestWaitTicks);
 public sealed record BankInspection(BankView Bank, CarView Car, IReadOnlyList<HallCallInspection> HallCalls,
-    IReadOnlyList<int> PassengerStops);
+    IReadOnlyList<int> PassengerStops, IReadOnlyList<CarView> Cars);
 
 public sealed partial class GameSession
 {
+    /// <summary>Explains entrance-to-room access without advancing or retrying any journey.</summary>
+    public RouteDiagnostic DiagnoseRoomAccess(long roomId, bool service = false)
+    {
+        if (Room(roomId) is not { } room) return new(RouteStatus.Disconnected, "The destination facility no longer exists.", []);
+        if (Entrance is not { } entrance) return new(RouteStatus.Disconnected, "Build or reopen a ground-floor lobby to provide an entrance.", []);
+        return Transport.DiagnoseRoute(entrance.Floor, entrance.X, room.Floor, room.X, service);
+    }
+
     /// <summary>Returns null once the stable ID has departed; reading never retries or creates a journey.</summary>
     public PersonInspection? InspectPerson(long id)
     {
@@ -31,7 +39,8 @@ public sealed partial class GameSession
     public BankInspection? InspectBank(int id)
     {
         var bank = Transport.Banks.FirstOrDefault(view => view.Definition.Id == id);
-        var car = Transport.Cars.FirstOrDefault(view => view.BankId == id);
+        var cars = Transport.Cars.Where(view => view.BankId == id).ToArray();
+        var car = cars.FirstOrDefault();
         if (bank is null || car is null) return null;
         var journeys = Transport.Journeys.Where(journey => journey.BankId == id).ToArray();
         var hallCalls = journeys.Where(journey => journey.State == JourneyState.Waiting && journey.NextStopFloor.HasValue)
@@ -42,12 +51,13 @@ public sealed partial class GameSession
         var stops = journeys.Where(journey => journey.State == JourneyState.Riding && journey.NextStopFloor.HasValue)
             .Select(journey => journey.NextStopFloor!.Value).Distinct()
             .OrderBy(floor => car.Direction < 0 ? -floor : floor).ToArray();
-        return new BankInspection(bank, car, Array.AsReadOnly(hallCalls), Array.AsReadOnly(stops));
+        return new BankInspection(bank, car, Array.AsReadOnly(hallCalls), Array.AsReadOnly(stops), Array.AsReadOnly(cars));
     }
 
     private string InspectionDestination(PersonState person, JourneyView journey)
     {
-        if (person.Activity == PersonActivity.Stranded) return "Exit when a route becomes available";
+        if (person.Activity == PersonActivity.Stranded) return person.Role == "Staff"
+            ? "Return to service depot when a route becomes available" : "Exit when a route becomes available";
         if (person.Activity == PersonActivity.Leaving)
         {
             var actualExit = World.Rooms.FirstOrDefault(room => room.DefinitionId == "lobby"
@@ -67,7 +77,7 @@ public sealed partial class GameSession
     {
         var floor = journey.DrawFloor.ToString("0.00", CultureInfo.InvariantCulture);
         if (journey.State == JourneyState.Riding)
-            return $"Elevator #{journey.BankId}, floor {floor}";
+            return $"Bank #{journey.BankId}, car #{journey.CarId}, floor {floor}";
         if (journey.State == JourneyState.Waiting)
             return $"Floor {journey.Floor}, waiting for elevator #{journey.BankId}";
         if (person.Activity is PersonActivity.Visiting or PersonActivity.Working)

@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using VerticalDistrict.Core;
@@ -7,9 +9,8 @@ using VerticalDistrict.Core.Geography;
 using VerticalDistrict.Core.Simulation;
 using VerticalDistrict.Core.Transport;
 
-// Finance acceptance only: these fixtures deliberately retain the existing transient
-// residential/office visits, admission-based food charges, and implicit service jobs.
-// They do not certify the later tenancy, completed-service, or complaint milestones.
+// Ledger acceptance uses the integrated management simulation. Detailed contract,
+// completed-service, complaint and task acceptance lives in Management.Tests.
 var data = Path.Combine(AppContext.BaseDirectory, "Data");
 var catalog = ContentCatalog.Load(File.ReadAllText(Path.Combine(data, "construction.catalog.json")));
 var rules = SimulationRules.Load(File.ReadAllText(Path.Combine(data, "simulation.rules.json")), catalog);
@@ -47,6 +48,26 @@ Console.WriteLine($"{selected.Length - failed}/{selected.Length} finance cases p
 return failed == 0 && selected.Length > 0 ? 0 : 1;
 
 GameSession NewGame() => new(catalog, rules, locations);
+string LegacyRulesHash()
+{
+    var legacyRules = JsonSerializer.SerializeToNode(rules, SimulationRules.JsonOptions)!.AsObject();
+    legacyRules.Remove("products"); legacyRules.Remove("management");
+    return Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(legacyRules.ToJsonString(SimulationRules.JsonOptions))));
+}
+void LegacyTransportHeader(JsonObject save)
+{
+    var transport = save["transport"]!.AsObject(); transport["schemaVersion"] = 1;
+    foreach (var bank in transport["banks"]!.AsArray())
+    {
+        bank!.AsObject().Remove("additionalCars"); bank["definition"]!.AsObject().Remove("additionalShafts");
+        bank["car"]!.AsObject().Remove("carId"); bank["car"]!.AsObject().Remove("isOutOfService");
+    }
+    foreach (var journey in transport["journeys"]!.AsArray())
+    {
+        journey!.AsObject().Remove("assignedCarId"); journey.AsObject().Remove("completedRides");
+        foreach (var leg in journey["route"]!.AsArray()) leg!.AsObject().Remove("carId");
+    }
+}
 long Build(GameSession game, string definition, int x, int floor)
 {
     var result = game.BuildRoom(definition, x, floor); Succeed(result); return result.EntityId!.Value;
@@ -203,8 +224,8 @@ void AtomicBillingFailure()
     AdvanceToBill(game); AdvanceToBill(restored);
     Check(game.Serialize() == restored.Serialize(), "Recovered invoice changed the next saved billing period.");
     Check(game.World.Ledger.Last(e => e.EntityId == cafe && e.Category == "Operations.Wages").AmountMinor == -3 * rules.For("cafe")!.StaffSalaryMinor
-        && game.World.Ledger.Last(e => e.Category == "Lease.Home").AmountMinor == 110_000,
-        "The next settled period failed to adopt the edited staffing or residential price.");
+        && game.World.Ledger.Last(e => e.Category == "Lease.Home").AmountMinor == operation.PriceMinor,
+        "The next period did not adopt edited staffing while preserving the active lease's agreed rent.");
     AssertLedger(game);
     void RejectPending(Action<JsonObject> change)
     {
@@ -378,9 +399,11 @@ void InvalidFinanceMetadata()
 }
 void LegacyMigration()
 {
-    var game = SmallTower(); game.Advance(7200);
+    var game = NewGame(); Build(game, "lobby", 0, 0); Build(game, "office", 6, 0); game.Advance(7200);
     var modern = game.Serialize();
-    var legacy = JsonNode.Parse(modern)!.AsObject(); legacy["schemaVersion"] = 2; legacy.Remove("finance");
+    var legacy = JsonNode.Parse(modern)!.AsObject(); legacy["schemaVersion"] = 2; legacy.Remove("finance"); legacy.Remove("management");
+    legacy["rulesFingerprint"] = LegacyRulesHash();
+    LegacyTransportHeader(legacy);
     var migrated = Restore(legacy.ToJsonString());
     Check(JsonSerializer.Serialize(migrated.World.Ledger) == JsonSerializer.Serialize(game.World.Ledger), "Migration rewrote financial history.");
     Check(migrated.World.CashMinor == game.World.CashMinor && migrated.Billing == game.Billing, "Migration changed cash or the next obligation.");
@@ -392,7 +415,9 @@ void LegacyMigration()
 void LegacyCombinedUpkeep()
 {
     var game = SmallTower(); AdvanceToBill(game); game.Advance(7200);
-    var legacy = JsonNode.Parse(game.Serialize())!.AsObject(); legacy["schemaVersion"] = 2; legacy.Remove("finance");
+    var legacy = JsonNode.Parse(game.Serialize())!.AsObject(); legacy["schemaVersion"] = 2; legacy.Remove("finance"); legacy.Remove("management");
+    legacy["rulesFingerprint"] = LegacyRulesHash();
+    LegacyTransportHeader(legacy);
     var source = legacy["world"]!["ledger"]!.AsArray(); var entries = new JsonArray();
     foreach (var entry in source)
     {
@@ -435,7 +460,9 @@ void CondoMigration()
     Check(game.OperationFor(condo)!.CondoSold && game.Occupancy(condo) > 0, "A physical owner never completed the purchase.");
     Check(game.CurrentFinances.CapitalReceiptsMinor == sale.AmountMinor && game.CurrentFinances.OperatingRevenueMinor == 0,
         "A condominium ownership receipt became recurring operating profit.");
-    var legacy = JsonNode.Parse(game.Serialize())!.AsObject(); legacy["schemaVersion"] = 2; legacy.Remove("finance");
+    var legacy = JsonNode.Parse(game.Serialize())!.AsObject(); legacy["schemaVersion"] = 2; legacy.Remove("finance"); legacy.Remove("management");
+    legacy["rulesFingerprint"] = LegacyRulesHash();
+    LegacyTransportHeader(legacy);
     legacy["todayRevenue"] = sale.AmountMinor;
     var migrated = Restore(legacy.ToJsonString());
     Check(JsonSerializer.Serialize(game.World.Ledger) == JsonSerializer.Serialize(migrated.World.Ledger), "Condominium migration rewrote its purchase receipt.");

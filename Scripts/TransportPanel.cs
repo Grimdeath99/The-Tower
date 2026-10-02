@@ -11,7 +11,9 @@ public partial class TransportPanel : AcceptDialog
 {
     public event Action<string>? Changed;
     private GameSession? _session;
-    private OptionButton _bank = null!, _connectorType = null!;
+    private OptionButton _bank = null!, _connectorType = null!, _car = null!;
+    private SpinBox _newCarX = null!;
+    private Button _addCar = null!, _removeCar = null!, _pauseCar = null!, _resumeCar = null!;
     private SpinBox _x = null!, _min = null!, _max = null!, _capacity = null!, _travel = null!, _doors = null!;
     private SpinBox _stairFloor = null!, _stairX = null!;
     private LineEdit _stops = null!;
@@ -31,14 +33,15 @@ public partial class TransportPanel : AcceptDialog
         _built = true;
     }
 
-    public void OpenFor(GameSession session, int selectedBankId = 0)
+    public void OpenFor(GameSession session, int selectedBankId = 0, int selectedCarId = 1)
     {
         _session = session;
         if (!_built) return;
         _status.Text = "Select an existing bank to inspect it, or New bank to reserve an empty shaft.";
         _status.AddThemeColorOverride("font_color", new Color("8dabb7"));
         RefreshBanks(selectedBankId);
-        _costs.Text = $"Bank: {Main.Money(session.Rules.ElevatorCostMinor)}   |   Stairs: {Main.Money(session.Rules.StairCostMinor)}   |   Escalator: {Main.Money(session.Rules.EscalatorCostMinor)}";
+        SelectCar(selectedCarId);
+        _costs.Text = $"Each shaft + car: {Main.Money(session.Rules.ElevatorCostMinor)}   |   Stairs: {Main.Money(session.Rules.StairCostMinor)}   |   Escalator: {Main.Money(session.Rules.EscalatorCostMinor)}";
         _stairFloor.Value = Math.Max(0, session.World.Floors.Min());
         _stairX.Value = FindEmptyBay();
         RefreshMetrics();
@@ -66,13 +69,23 @@ public partial class TransportPanel : AcceptDialog
         content.AddThemeConstantOverride("separation", 12);
         scroll.AddChild(content);
         content.AddChild(Label("ELEVATOR BANKS", 18, "8ed9bd"));
-        content.AddChild(Wrap("Each bank has one car in its own shaft. Local banks stop at every selected floor; express banks skip floors. Transfers use shared stop floors and corridors."));
+        content.AddChild(Wrap("A bank coordinates cars in separate shafts. Local service stops at each selected floor; express service passes other floors. Transfers require alighting and walking through the supported floor corridor to another bank."));
         var selector = new HBoxContainer();
         selector.AddChild(Label("Selected bank", 14));
         _bank = new OptionButton { SizeFlagsHorizontal = Control.SizeFlags.ExpandFill, CustomMinimumSize = new Vector2(0, 36) };
         _bank.ItemSelected += _ => LoadSelectedBank();
         selector.AddChild(_bank);
         content.AddChild(selector);
+        var cars = new HBoxContainer();
+        _car = new OptionButton { SizeFlagsHorizontal = Control.SizeFlags.ExpandFill };
+        _car.ItemSelected += _ => RefreshMetrics(); cars.AddChild(_car);
+        _pauseCar = ActionButton("Pause car", () => MutateCar(true)); cars.AddChild(_pauseCar);
+        _resumeCar = ActionButton("Restore car", () => MutateCar(false)); cars.AddChild(_resumeCar);
+        _removeCar = ActionButton("Remove empty car + shaft", RemoveSelectedCar); cars.AddChild(_removeCar);
+        content.AddChild(cars);
+        var addCar = new HBoxContainer();
+        addCar.AddChild(Label("Additional shaft bay", 14)); _newCarX = Number(0, ConstructionWorld.Width - 1, 28); addCar.AddChild(_newCarX);
+        _addCar = ActionButton("Build coordinated car + shaft", AddCar); addCar.AddChild(_addCar); content.AddChild(addCar);
 
         var grid = new GridContainer { Columns = 6 };
         grid.AddThemeConstantOverride("h_separation", 12);
@@ -111,7 +124,7 @@ public partial class TransportPanel : AcceptDialog
         _restore = ActionButton("Restore service", () => MutateSelected(id => _session!.Transport.SetBankOutOfService(id, false)));
         foreach (var button in new[] { _install, _update, _remove, _disable, _restore }) actions.AddChild(button);
         content.AddChild(actions);
-        content.AddChild(Wrap("Configuration changes require a stopped, empty car. A service pause lands a moving car at its next stop and releases passengers to find another route. Removing a bank requires no waiting or onboard passengers."));
+        content.AddChild(Wrap("Settings require every car to be stopped and empty. Pausing a car preserves riders until its next safe stop; other cars keep serving the bank. Removing a car or bank is rejected while its passengers or assignments remain."));
         content.AddChild(new HSeparator());
 
         content.AddChild(Label("STAIRS & ESCALATORS", 18, "8ed9bd"));
@@ -148,6 +161,7 @@ public partial class TransportPanel : AcceptDialog
     }
 
     private int SelectedBankId => _bank.Selected >= 0 ? _bank.GetItemId(_bank.Selected) : 0;
+    private int SelectedCarId => _car.Selected >= 0 ? _car.GetItemId(_car.Selected) : 1;
 
     private void RefreshBanks(int selectedId)
     {
@@ -158,7 +172,7 @@ public partial class TransportPanel : AcceptDialog
         {
             index++;
             var d = bank.Definition;
-            _bank.AddItem($"Bank {d.Id}  |  bay {d.X}  |  floors {d.MinFloor} to {d.MaxFloor}" + (d.ServiceOnly ? "  |  staff" : ""), d.Id);
+            _bank.AddItem($"Bank {d.Id}  |  {bank.CarCount} cars  |  floors {d.MinFloor} to {d.MaxFloor}" + (d.ServiceOnly ? "  |  staff" : ""), d.Id);
             if (d.Id == selectedId) selected = index;
         }
         _bank.Select(selected);
@@ -181,6 +195,11 @@ public partial class TransportPanel : AcceptDialog
         _x.Editable = isNew; _min.Editable = isNew; _max.Editable = isNew;
         _install.Disabled = !isNew;
         _update.Disabled = isNew; _remove.Disabled = isNew; _disable.Disabled = isNew; _restore.Disabled = isNew;
+        _car.Clear();
+        foreach (var car in _session.Transport.Cars.Where(c => c.BankId == SelectedBankId))
+            _car.AddItem($"Car {car.CarId} · shaft {car.ShaftId} · bay {car.X}", car.CarId);
+        _addCar.Disabled = isNew; _newCarX.Value = FindEmptyBay();
+        RefreshMetrics();
     }
 
     private int FindEmptyBay()
@@ -215,7 +234,8 @@ public partial class TransportPanel : AcceptDialog
         if (floors.Count < 2 || floors.Distinct().Count() != floors.Count)
         { Report(new CommandResult(false, "Select at least two different floors; remove duplicate numbers.")); return false; }
         definition = new BankDefinition(id, (int)_x.Value, (int)_min.Value, (int)_max.Value, floors.ToArray(),
-            (int)_capacity.Value, (int)_travel.Value, (int)_doors.Value, _service.ButtonPressed);
+            (int)_capacity.Value, (int)_travel.Value, (int)_doors.Value, _service.ButtonPressed,
+            _session?.Transport.Banks.FirstOrDefault(b => b.Definition.Id == id)?.Definition.AdditionalShafts);
         return true;
     }
 
@@ -249,6 +269,45 @@ public partial class TransportPanel : AcceptDialog
         Report(action(SelectedBankId));
     }
 
+    private void SelectCar(int carId)
+    {
+        for (var i = 0; i < _car.ItemCount; i++) if (_car.GetItemId(i) == carId) { _car.Select(i); break; }
+        RefreshMetrics();
+    }
+    private void AddCar()
+    {
+        if (_session == null || SelectedBankId == 0) return;
+        var ids = _session.Transport.Cars.Where(c => c.BankId == SelectedBankId).Select(c => c.CarId).ToHashSet();
+        var next = 2; while (ids.Contains(next)) next++;
+        var result = _session.Transport.AddCar(SelectedBankId, next, (int)_newCarX.Value, _session.Rules.ElevatorCostMinor);
+        if (result.Success) { RefreshBanks(SelectedBankId); SelectCar(next); }
+        Report(result);
+    }
+    private void RemoveSelectedCar()
+    {
+        if (_session == null || SelectedBankId == 0) return;
+        var result = _session.Transport.RemoveCar(SelectedBankId, SelectedCarId);
+        if (result.Success) RefreshBanks(SelectedBankId);
+        Report(result);
+    }
+    private void MutateCar(bool disabled)
+    {
+        if (_session == null || SelectedBankId == 0) return;
+        Report(_session.Transport.SetCarOutOfService(SelectedBankId, SelectedCarId, disabled));
+    }
+
+    internal void VerifyCarControls(int bankId, int carId)
+    {
+        if (_session == null) throw new InvalidOperationException("No transport session.");
+        RefreshBanks(bankId); SelectCar(carId);
+        _pauseCar.EmitSignal(BaseButton.SignalName.Pressed);
+        if (!_session.Transport.Cars.Single(c => c.BankId == bankId && c.CarId == carId).IsOutOfService)
+            throw new InvalidOperationException("Pause car did not issue its validated command.");
+        _resumeCar.EmitSignal(BaseButton.SignalName.Pressed);
+        if (_session.Transport.Cars.Single(c => c.BankId == bankId && c.CarId == carId).IsOutOfService)
+            throw new InvalidOperationException("Restore car did not issue its validated command.");
+    }
+
     private void Report(CommandResult result)
     {
         _status.Text = result.Message;
@@ -263,17 +322,28 @@ public partial class TransportPanel : AcceptDialog
         var m = _session.Transport.Metrics;
         var overloaded = m.OverloadedFloors.Count == 0 ? "none" : string.Join(", ", m.OverloadedFloors);
         _metrics.Text = $"Waiting {m.Waiting}   |   Riding {m.Riding}   |   Seat utilization {m.Utilization:P0}\n"
-            + $"Average wait {m.AverageWaitTicks:F1}s   |   95th percentile {m.P95WaitTicks}s   |   Samples {m.WaitSampleCount}   |   Abandoned {m.AbandonedTrips}\n"
-            + $"Overloaded floors: {overloaded}";
+            + $"Completed boarding waits (last {m.WaitSampleCount}, max 2048): average {m.AverageWaitTicks:F1}s · p95 {m.P95WaitTicks}s\n"
+            + $"Oldest current wait {_session.Transport.Journeys.Where(j => j.State == JourneyState.Waiting).Select(j => _session.Tick - j.WaitSinceTick).DefaultIfEmpty().Max()}s · abandoned journeys {m.AbandonedTrips} (lifetime)\n"
+            + $"Queue exceeds available bank seats on floors: {overloaded} (current pressure)";
         var banks = _session.Transport.Banks.ToDictionary(b => b.Definition.Id);
         _carDetails.Text = _session.Transport.Cars.Count == 0 ? "No elevator banks installed." : string.Join("\n", _session.Transport.Cars.Select(car =>
-            $"Bank {car.BankId}: {car.State}   |   floor {car.DrawFloor:F1} → {car.TargetFloor}   |   {car.PassengerCount}/{car.Capacity} onboard   |   {banks[car.BankId].WaitingCount} waiting"));
+            $"Bank {car.BankId} / car {car.CarId} / bay {car.X}: {car.State}   |   floor {car.DrawFloor:F1} → {car.TargetFloor}   |   {car.PassengerCount}/{car.Capacity} onboard   |   {banks[car.BankId].WaitingCount} bank queue"));
         _stairDetails.Text = _session.Transport.Stairs.Count == 0 ? "No stairs or escalators installed. Escalators carry people only in their configured direction; each connection joins two adjacent floors." :
             string.Join("   •   ", _session.Transport.Stairs.OrderBy(s => s.LowerFloor).ThenBy(s => s.X).Select(s =>
                 $"{(s.Direction == 0 ? "Stairs" : "Escalator")} {s.LowerFloor} {(s.Direction == 0 ? "↔" : s.Direction > 0 ? "→" : "←")} {s.LowerFloor + 1}, bay {s.X}"));
         var selected = banks.GetValueOrDefault(SelectedBankId);
         _disable.Disabled = selected == null || selected.IsOutOfService;
         _restore.Disabled = selected == null || !selected.IsOutOfService;
+        var chosen = _session.Transport.Cars.FirstOrDefault(c => c.BankId == SelectedBankId && c.CarId == SelectedCarId);
+        var fleet = _session.Transport.Cars.Where(c => c.BankId == SelectedBankId).ToArray();
+        var hallAssignments = _session.Transport.Journeys.Where(j => j.BankId == SelectedBankId
+            && (j.State == JourneyState.Waiting || j.State == JourneyState.Walking && j.CarId.HasValue)).ToArray();
+        _update.Disabled = selected == null || fleet.Any(c => c.PassengerCount > 0 || c.State == CarState.Traveling);
+        _remove.Disabled = _update.Disabled || hallAssignments.Length > 0;
+        _pauseCar.Disabled = chosen == null || chosen.IsOutOfService || selected?.IsOutOfService == true;
+        _resumeCar.Disabled = chosen == null || !chosen.IsOutOfService || selected?.IsOutOfService == true;
+        _removeCar.Disabled = chosen == null || chosen.CarId == 1 || chosen.PassengerCount > 0
+            || chosen.State == CarState.Traveling || hallAssignments.Any(j => j.CarId == chosen.CarId);
     }
 
     private static Label Label(string text, int size = 14, string? color = null)

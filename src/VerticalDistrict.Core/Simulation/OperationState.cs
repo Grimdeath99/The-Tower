@@ -1,6 +1,6 @@
 namespace VerticalDistrict.Core.Simulation;
 
-public enum PersonActivity { Arriving, Visiting, Leaving, Working, Returning, Stranded }
+public enum PersonActivity { Arriving, Visiting, Leaving, Working, Returning, Stranded, WaitingForService, BeingServed }
 public sealed record PersonState(long Id, long RoomId, string Role, PersonActivity Activity,
     long ActionAt, long CreatedAt, int Satisfaction, long? ServiceTargetId = null);
 public sealed record RoomOperation(long RoomId, long PriceMinor, bool Open, int Staff,

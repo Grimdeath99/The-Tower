@@ -15,7 +15,7 @@ try {
     & $toolchain.DotnetPath build VerticalDistrict.sln --nologo
     if ($LASTEXITCODE -ne 0) { throw "Solution build failed with exit code $LASTEXITCODE." }
 
-    foreach ($suite in @('Core', 'Transport', 'Persistence', 'Geography', 'Simulation', 'Finance')) {
+    foreach ($suite in @('Core', 'Transport', 'Persistence', 'Geography', 'Simulation', 'Finance', 'Management')) {
         $testProject = "tests/VerticalDistrict.$suite.Tests"
         Write-Host "Running $suite tests..."
         & $toolchain.DotnetPath run --project $testProject -c Release
@@ -48,7 +48,7 @@ try {
         throw "Godot exited without the required CONSTRUCTION_SMOKE_PASS marker. Log: $logPath"
     }
 
-    Write-Host "Verification passed: solution build, all six test suites, and integrated Godot scene smoke. Log: $logPath"
+    Write-Host "Verification passed: solution build, all seven test suites, and integrated Godot scene smoke. Log: $logPath"
 }
 finally {
     Pop-Location

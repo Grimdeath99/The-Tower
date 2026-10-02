@@ -7,6 +7,72 @@
   "escalatorCostMinor": 700000,
   "eventPreparationCostMinor": 50000,
   "repairCostMinor": 25000,
+  "management": {
+    "leaseDays": 7,
+    "tenantGraceDays": 2,
+    "minContractDemand": 40,
+    "foodPatienceSeconds": 600,
+    "hotelArrivalTimeoutSeconds": 1200,
+    "businessHistoryLimit": 256,
+    "serviceCleanThreshold": 85,
+    "serviceRepairThreshold": 85,
+    "hourlyConditionLoss": 1,
+    "hourlyCleanlinessLoss": 1,
+    "occupiedHourlyCleanlinessLoss": 2,
+    "cleaningCostMinor": 100,
+    "serviceRetrySeconds": 120,
+    "serviceHistoryLimit": 128,
+    "satisfactionStepPerHour": 5,
+    "travelComfortSeconds": 180,
+    "complaintHistoryLimit": 128,
+    "satisfactionHistoryHours": 168
+  },
+  "products": [
+    {
+      "id": "cafe-classic",
+      "model": "Food",
+      "name": "Classic cafe menu",
+      "category": "Everyday",
+      "pricePercent": 100,
+      "servicePercent": 100,
+      "demandPercent": 100,
+      "lunchDemandPercent": 100,
+      "provenance": "Original Vertical District provisional offering, 2026-10-01. Not approved GDD balance or reference-game facts."
+    },
+    {
+      "id": "cafe-lunch",
+      "model": "Food",
+      "name": "Lunch menu",
+      "category": "Lunch",
+      "pricePercent": 150,
+      "servicePercent": 150,
+      "demandPercent": 80,
+      "lunchDemandPercent": 160,
+      "provenance": "Original Vertical District provisional offering, 2026-10-01. Not approved GDD balance or reference-game facts."
+    },
+    {
+      "id": "shop-essentials",
+      "model": "Shop",
+      "name": "Everyday essentials",
+      "category": "Essentials",
+      "pricePercent": 100,
+      "servicePercent": 100,
+      "demandPercent": 100,
+      "lunchDemandPercent": 100,
+      "provenance": "Original Vertical District provisional offering, 2026-10-01. Not approved GDD balance or reference-game facts."
+    },
+    {
+      "id": "shop-gifts",
+      "model": "Shop",
+      "name": "Gift assortment",
+      "category": "Gifts",
+      "pricePercent": 160,
+      "servicePercent": 180,
+      "demandPercent": 70,
+      "lunchDemandPercent": 100,
+      "provenance": "Original Vertical District provisional offering, 2026-10-01. Not approved GDD balance or reference-game facts."
+    }
+  ],
   "businesses": [
     {
       "id": "lobby",

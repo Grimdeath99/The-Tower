@@ -52,7 +52,7 @@ public partial class Main
         row.AddChild(Button("People", OpenPeople, "Inspect real people, queues and onboard passengers, including off-screen journeys."));
         row.AddChild(Button("Transport", () => _transportPanel.OpenFor(Session)));
         row.AddChild(Button("Finances", () => OpenFinances(), "Operating result, cash flow, category breakdowns and scheduled bills."));
-        row.AddChild(Button("Reports", OpenReports));
+        row.AddChild(Button("Manage", OpenManagementLoop, "Staff, service tasks, demand, satisfaction and progression."));
         var overlay = new OptionButton { CustomMinimumSize = new Vector2(140, 0) };
         foreach (var name in new[] { "None", "Access", "Traffic", "Services", "Utilities", "Condition" }) overlay.AddItem(name);
         overlay.ItemSelected += index => { Overlay = overlay.GetItemText((int)index); Canvas.QueueRedraw(); };
@@ -84,6 +84,8 @@ public partial class Main
         _transportPanel.Changed += message => { SetStatus(message); Refresh(); };
         BuildPeopleBrowser();
         BuildFinancesDialog();
+        BuildManagementLoopDialog();
+        BuildCatalogueDialog();
         _facility = Dialog("Facility operations", new Vector2I(650, 650), out _facilityBody);
         _saves = Dialog("Saved districts", new Vector2I(620, 540), out _saveBody);
         _reportsDialog = Dialog("District reports & progression", new Vector2I(820, 700), out var reports);
@@ -102,6 +104,7 @@ public partial class Main
         newBody.AddChild(Button("Start with a 20-floor operating example", () => ConfirmNewDistrict(true, 20)));
         newBody.AddChild(Button("Start with an empty foundation", () => ConfirmNewDistrict(false)));
         AddCommuteSetup(newBody);
+        AddTransferSetup(newBody);
         RefreshSites();
         _menu = Dialog("VERTICAL DISTRICT", new Vector2I(560, 500), out var menu);
         menu.AddChild(Text("A CITY, ONE FLOOR AT A TIME", 18, Accent));
@@ -154,31 +157,52 @@ public partial class Main
     }
     private void OpenSelectedFacility()
     {
-        if (SelectedBankId is { } bankId) { _transportPanel.OpenFor(Session, bankId); return; }
+        if (SelectedBankId is { } bankId) { _transportPanel.OpenFor(Session, bankId, SelectedCarId ?? 1); return; }
         if (SelectedId is not { } id || Session.OperationFor(id) is not { } op) return;
         Clear(_facilityBody); var room = World.Rooms.Single(r => r.Id == id); var definition = Catalog.Get(room.DefinitionId);
+        _facilityRoomId = id;
         _facility.Title = definition.Name + " — operations";
-        _facilityBody.AddChild(Text(Session.OperatingWarning(id), 17, Accent));
-        _facilityBody.AddChild(Wrap($"{definition.Description}\n\nCleanliness {op.Cleanliness}% · Condition {op.Condition}%\nCurrent occupants {Session.Occupancy(id)}, including arrivals/reservations {Session.ReservedCapacity(id)}\n{(op.Dirty ? "Hotel inventory is DIRTY and cannot be resold." : "")}", 14, Muted));
+        _facilityLiveText = new RichTextLabel { FitContent = true, BbcodeEnabled = false, SelectionEnabled = true, MouseFilter = MouseFilterEnum.Stop };
+        _facilityBody.AddChild(_facilityLiveText);
+        var controls = new HBoxContainer(); controls.AddThemeConstantOverride("separation", 18);
+        var priceControls = new VBoxContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill };
+        var staffControls = new VBoxContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill };
+        controls.AddChild(priceControls); controls.AddChild(staffControls); _facilityBody.AddChild(controls);
         var price = new SpinBox { MinValue = 0, MaxValue = 1_000_000, Step = .01, Value = op.PriceMinor / 100d, Prefix = "$" };
-        _facilityBody.AddChild(Text("Price / rent / contract amount", 14)); _facilityBody.AddChild(price);
-        _facilityBody.AddChild(Button("Apply price", () => ApplyOperation(Session.SetPrice(id, checked((long)Math.Round(price.Value * 100, MidpointRounding.AwayFromZero))))));
+        priceControls.AddChild(Wrap(room.DefinitionId == "condo" ? "Asking sale price (accepted offers keep their price)" : "Price / rent / contract amount", 14)); priceControls.AddChild(price);
+        priceControls.AddChild(Button("Apply price", () => ApplyOperation(Session.SetPrice(id, checked((long)Math.Round(price.Value * 100, MidpointRounding.AwayFromZero))))));
         var staff = new SpinBox { MinValue = 0, MaxValue = 20, Step = 1, Value = op.Staff };
-        _facilityBody.AddChild(Text("Assigned staff (salaries charged daily)", 14)); _facilityBody.AddChild(staff);
-        _facilityBody.AddChild(Button("Apply staffing", () => ApplyOperation(Session.SetStaff(id, (int)staff.Value))));
+        staffControls.AddChild(Wrap("Assigned staff (salaries charged daily)", 14)); staffControls.AddChild(staff);
+        staffControls.AddChild(Button("Apply staffing", () => ApplyOperation(Session.SetStaff(id, (int)staff.Value))));
         var open = new CheckButton { Text = "Open for business", ButtonPressed = op.Open };
+        _facilityOpen = open;
         open.Toggled += value => { var result = Session.SetOpen(id, value); if (!result.Success) open.SetPressedNoSignal(!value); ApplyOperation(result); };
         _facilityBody.AddChild(open);
+        if (_rules.For(room.DefinitionId)?.Model is "Food" or "Shop")
+        {
+            BuildOfferingControls(id, price);
+            _facilityBody.MoveChild(_facilityLiveText, _facilityBody.GetChildCount() - 1);
+        }
         if (room.DefinitionId == "cinema")
         {
             var films = new OptionButton(); foreach (var name in new[] { "City After Rain · 120 min", "Rooftop Garden · 90 min", "The Night Shift · 60 min" }) films.AddItem(name);
             films.Select(op.Film); films.ItemSelected += choice => ApplyOperation(Session.SetFilm(id, (int)choice)); _facilityBody.AddChild(films);
         }
         if (room.DefinitionId == "event-hall") _facilityBody.AddChild(Button("Schedule event in 1 hour · " + Money(_rules.EventPreparationCostMinor), () => ApplyOperation(Session.ScheduleEvent(id))));
-        if (room.DefinitionId == "condo") _facilityBody.AddChild(Button("Repurchase ownership · " + Money(op.CondoSaleMinor), () => ApplyOperation(Session.BuyBackCondo(id))));
+        _condoBuyback = null;
+        if (room.DefinitionId == "condo")
+        {
+            _condoBuyback = Button("Repurchase ownership", () => ApplyOperation(Session.BuyBackCondo(id)));
+            _facilityBody.AddChild(_condoBuyback);
+            _facilityBody.MoveChild(_condoBuyback, 0);
+        }
         _facilityBody.AddChild(Button("Request routed maintenance", () => ApplyOperation(Session.RepairRoom(id))));
+        if (_rules.For(room.DefinitionId)?.Model is "Office" or "Home")
+            _facilityBody.AddChild(Button("End tenancy and release room", () => ApplyOperation(Session.EndTenancy(id))));
         _facilityBody.AddChild(Button("View facility transactions", () => { _facility.Hide(); OpenFinances(id); }));
+        _facility.Size = _rules.For(room.DefinitionId)?.Model is "Food" or "Shop" ? new Vector2I(800, 760) : new Vector2I(650, 650);
         _facility.PopupCentered();
+        RefreshFacilityLiveState();
     }
     private void ApplyOperation(CommandResult result) { SetStatus(result.Message); if (result.Success) PlayCue(520); Refresh(); RefreshFinances(true); }
     private void OpenReports()

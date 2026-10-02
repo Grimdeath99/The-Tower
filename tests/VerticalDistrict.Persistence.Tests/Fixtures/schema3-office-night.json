@@ -1,0 +1,372 @@
+{
+  "schemaVersion": 3,
+  "rulesFingerprint": "B9BCDF646FA542BA04D974C0332AE8A47D33307AE2BE25AFCB6B1B97412F54FF",
+  "geographyFingerprint": "9C50B6B3D6AE9986ECD5440F714D7E7D12FE2044B47E23A5B9DA093D00AE600C",
+  "world": {
+    "schemaVersion": 2,
+    "contentFingerprint": "332B6128C7B0A4F1A5E76604AA9A15E02226D825AB3E5F628C7B6401A8CA4AAF",
+    "startingCashMinor": 250000000,
+    "cashMinor": 232955000,
+    "rank": 1,
+    "nextRoomId": 5,
+    "commandSequence": 11,
+    "topologyVersion": 7,
+    "floors": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "rooms": [
+      {
+        "id": 1,
+        "definitionId": "lobby",
+        "x": 0,
+        "floor": 0
+      },
+      {
+        "id": 2,
+        "definitionId": "office",
+        "x": 0,
+        "floor": 3
+      },
+      {
+        "id": 3,
+        "definitionId": "office",
+        "x": 5,
+        "floor": 3
+      },
+      {
+        "id": 4,
+        "definitionId": "office",
+        "x": 10,
+        "floor": 3
+      }
+    ],
+    "ledger": [
+      {
+        "sequence": 1,
+        "timestampTicks": 0,
+        "category": "Construction.Floor",
+        "entityId": null,
+        "floor": 1,
+        "amountMinor": -500000,
+        "balanceAfterMinor": 249500000,
+        "description": "Built floor 1."
+      },
+      {
+        "sequence": 2,
+        "timestampTicks": 0,
+        "category": "Construction.Floor",
+        "entityId": null,
+        "floor": 2,
+        "amountMinor": -500000,
+        "balanceAfterMinor": 249000000,
+        "description": "Built floor 2."
+      },
+      {
+        "sequence": 3,
+        "timestampTicks": 0,
+        "category": "Construction.Floor",
+        "entityId": null,
+        "floor": 3,
+        "amountMinor": -500000,
+        "balanceAfterMinor": 248500000,
+        "description": "Built floor 3."
+      },
+      {
+        "sequence": 4,
+        "timestampTicks": 0,
+        "category": "Construction.Room",
+        "entityId": 1,
+        "floor": 0,
+        "amountMinor": -1200000,
+        "balanceAfterMinor": 247300000,
+        "description": "Built Entrance Lobby #1."
+      },
+      {
+        "sequence": 5,
+        "timestampTicks": 0,
+        "category": "Transport.Construction",
+        "entityId": null,
+        "floor": null,
+        "amountMinor": -8000000,
+        "balanceAfterMinor": 239300000,
+        "description": "Installed elevator bank."
+      },
+      {
+        "sequence": 6,
+        "timestampTicks": 0,
+        "category": "Construction.Room",
+        "entityId": 2,
+        "floor": 3,
+        "amountMinor": -2200000,
+        "balanceAfterMinor": 237100000,
+        "description": "Built Office #2."
+      },
+      {
+        "sequence": 7,
+        "timestampTicks": 0,
+        "category": "Construction.Room",
+        "entityId": 3,
+        "floor": 3,
+        "amountMinor": -2200000,
+        "balanceAfterMinor": 234900000,
+        "description": "Built Office #3."
+      },
+      {
+        "sequence": 8,
+        "timestampTicks": 0,
+        "category": "Construction.Room",
+        "entityId": 4,
+        "floor": 3,
+        "amountMinor": -2200000,
+        "balanceAfterMinor": 232700000,
+        "description": "Built Office #4."
+      },
+      {
+        "sequence": 9,
+        "timestampTicks": 3900,
+        "category": "Lease.Office",
+        "entityId": 2,
+        "floor": null,
+        "amountMinor": 85000,
+        "balanceAfterMinor": 232785000,
+        "description": "Day 1: occupied office lease."
+      },
+      {
+        "sequence": 10,
+        "timestampTicks": 3900,
+        "category": "Lease.Office",
+        "entityId": 3,
+        "floor": null,
+        "amountMinor": 85000,
+        "balanceAfterMinor": 232870000,
+        "description": "Day 1: occupied office lease."
+      },
+      {
+        "sequence": 11,
+        "timestampTicks": 3900,
+        "category": "Lease.Office",
+        "entityId": 4,
+        "floor": null,
+        "amountMinor": 85000,
+        "balanceAfterMinor": 232955000,
+        "description": "Day 1: occupied office lease."
+      }
+    ],
+    "clock": {
+      "currentTick": 57899,
+      "firstSimulationSequence": 1
+    }
+  },
+  "transport": {
+    "schemaVersion": 1,
+    "currentTick": 57899,
+    "topologyVersion": 2,
+    "observedWorldTopologyVersion": 7,
+    "banks": [
+      {
+        "definition": {
+          "id": 1,
+          "x": 27,
+          "minFloor": 0,
+          "maxFloor": 3,
+          "stops": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "capacity": 6,
+          "travelTicksPerFloor": 2,
+          "doorTicks": 2,
+          "serviceOnly": false
+        },
+        "isOutOfService": false,
+        "car": {
+          "bankId": 1,
+          "state": "Idle",
+          "floor": 0,
+          "targetFloor": 0,
+          "travelStartFloor": 3,
+          "direction": 0,
+          "timer": 0,
+          "duration": 2,
+          "passengers": []
+        }
+      }
+    ],
+    "stairs": [],
+    "journeys": [],
+    "waitSamples": [
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      28,
+      28,
+      28,
+      28,
+      28,
+      28,
+      52,
+      52,
+      52,
+      52,
+      52,
+      52,
+      76,
+      76,
+      76,
+      76,
+      76,
+      76,
+      4,
+      4,
+      4,
+      4,
+      4,
+      4,
+      28,
+      28,
+      23,
+      23,
+      23,
+      23,
+      47,
+      47,
+      47,
+      47,
+      42,
+      42,
+      66,
+      66,
+      66,
+      66,
+      66,
+      66
+    ],
+    "abandonedTrips": 0,
+    "occupiedCarTicks": 528,
+    "availableSeatTicks": 347394
+  },
+  "locationId": "tokyo",
+  "siteId": "central",
+  "sandbox": false,
+  "tick": 57899,
+  "nextPersonId": 25,
+  "randomState": 20260930,
+  "reputation": 75,
+  "completedTrips": 48,
+  "peakPopulation": 24,
+  "todayRevenue": 255000,
+  "todayExpenses": 0,
+  "todayArrivals": 24,
+  "todayDepartures": 24,
+  "todayAbandoned": 0,
+  "operations": [
+    {
+      "roomId": 1,
+      "priceMinor": 0,
+      "open": true,
+      "staff": 0,
+      "cleanliness": 84,
+      "condition": 84,
+      "dirty": false,
+      "reservationPersonId": null,
+      "contractActive": false,
+      "lastRentDay": -1,
+      "lastArrivalTick": -86400,
+      "condoSold": false,
+      "condoSaleMinor": 0,
+      "film": 0,
+      "nextEventTick": 0,
+      "eventPrepared": false,
+      "grossRevenueMinor": 0,
+      "costsMinor": 0
+    },
+    {
+      "roomId": 2,
+      "priceMinor": 85000,
+      "open": true,
+      "staff": 0,
+      "cleanliness": 67,
+      "condition": 84,
+      "dirty": false,
+      "reservationPersonId": null,
+      "contractActive": true,
+      "lastRentDay": 1,
+      "lastArrivalTick": 300,
+      "condoSold": false,
+      "condoSaleMinor": 0,
+      "film": 0,
+      "nextEventTick": 0,
+      "eventPrepared": false,
+      "grossRevenueMinor": 85000,
+      "costsMinor": 0
+    },
+    {
+      "roomId": 3,
+      "priceMinor": 85000,
+      "open": true,
+      "staff": 0,
+      "cleanliness": 67,
+      "condition": 84,
+      "dirty": false,
+      "reservationPersonId": null,
+      "contractActive": true,
+      "lastRentDay": 1,
+      "lastArrivalTick": 300,
+      "condoSold": false,
+      "condoSaleMinor": 0,
+      "film": 0,
+      "nextEventTick": 0,
+      "eventPrepared": false,
+      "grossRevenueMinor": 85000,
+      "costsMinor": 0
+    },
+    {
+      "roomId": 4,
+      "priceMinor": 85000,
+      "open": true,
+      "staff": 0,
+      "cleanliness": 67,
+      "condition": 84,
+      "dirty": false,
+      "reservationPersonId": null,
+      "contractActive": true,
+      "lastRentDay": 1,
+      "lastArrivalTick": 300,
+      "condoSold": false,
+      "condoSaleMinor": 0,
+      "film": 0,
+      "nextEventTick": 0,
+      "eventPrepared": false,
+      "grossRevenueMinor": 85000,
+      "costsMinor": 0
+    }
+  ],
+  "people": [],
+  "reports": [],
+  "notices": [
+    {
+      "tick": 0,
+      "text": "Welcome. Build a ground lobby, connect upper floors, and keep facilities staffed and clean.",
+      "kind": "Tutorial"
+    }
+  ],
+  "finance": {
+    "billing": {
+      "lastSettledDay": 0,
+      "lastSettledTick": 0,
+      "nextDueTick": 57900
+    },
+    "currentPeriodFirstSequence": 1,
+    "periods": [],
+    "legacyThroughSequence": 0,
+    "pendingBatches": []
+  }
+}

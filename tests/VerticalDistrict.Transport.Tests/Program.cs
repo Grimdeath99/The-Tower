@@ -26,7 +26,21 @@ var cases = new (string, Action)[]
     ("Cancellation preserves walked position and never teleports from stairs", SafeCancellation),
     ("Escalators enforce direction and charge only valid geometry", EscalatorDirection),
     ("Escalator to elevator transfers retain direction after active save/load", EscalatorTransferSave),
-    ("Continuous terminal demand cannot starve an older intermediate hall call", StarvationPrevention)
+    ("Continuous terminal demand cannot starve an older intermediate hall call", StarvationPrevention),
+    ("Paused construction access queries are pure and simulation observes edits exactly once", PausedAccessQueries),
+    ("Coordinated cars occupy distinct costed shafts and expose detached definitions", CoordinatedGeometry),
+    ("Multi-car transfer demand walks the connecting floor and accounts for every passenger", CoordinatedTransfer),
+    ("Assigned passengers walk to their actual shaft before boarding", AssignedApproach),
+    ("One cancelled hall passenger cannot cancel another passenger's assigned service", CoordinatedCancellation),
+    ("Individual car outage lands riders safely while its bank continues serving", IndividualOutage),
+    ("Unavailable car reassignment preserves an older hall call's age", ReassignmentAge),
+    ("Busy car removal and bank configuration reject atomically", CoordinatedEdits),
+    ("Route diagnostics separate disabled service permissions and missing stop geometry", RouteDiagnostics),
+    ("Active multi-car travel and transfer queues resume exactly after saving", CoordinatedSave),
+    ("Unrelated idle bank seats cannot hide pressure at a congested bank", BankPressure),
+    ("Added and restored cars serve the existing backlog without resetting queue age", CapacityEntry),
+    ("Reinstalled shaft identities require a physical walk from the old hall position", ReinstalledShaft),
+    ("Capacity changes preserve an approaching passenger's commitment and age through boarding", ApproachHandoff)
 };
 var failed = 0;
 foreach (var (name, run) in cases)
@@ -397,6 +411,316 @@ void StarvationPrevention()
         Assert(system.RequestJourney(id, id % 2 == 0 ? 0 : 5, 1, id % 2 == 0 ? 5 : 0, 1, patienceTicks: 5000).Success);
     Until(system, () => system.Journeys.Single(j => j.PersonId == 2).State == JourneyState.Arrived, 100);
     Assert(system.Journeys.Where(j => j.PersonId > 2).All(j => j.State == JourneyState.Waiting));
+}
+
+void PausedAccessQueries()
+{
+    var world = World(1);
+    var system = new TransportSystem(world);
+    Assert(system.InstallBank(new BankDefinition(1, 1, 0, 1, [0, 1])).Success);
+    Assert(system.RequestJourney(1, 0, 1, 1, 1).Success);
+    Assert(system.CanReach(0, 1, 1, 1));
+    var version = system.TopologyVersion;
+    Assert(world.BuildRoom("cafe", 5, 1).Success);
+    var paused = JsonSerializer.Serialize(system.CaptureSnapshot());
+    var building = JsonSerializer.Serialize(world.CaptureSnapshot());
+    for (var i = 0; i < 2; i++)
+    {
+        Assert(system.CanReach(0, 1, 1, 6));
+        Assert(!system.CanReach(2, 0, 2, 4));
+        Assert(JsonSerializer.Serialize(system.CaptureSnapshot()) == paused);
+        Assert(JsonSerializer.Serialize(world.CaptureSnapshot()) == building);
+    }
+    var restored = TransportSystem.RestoreSnapshot(world, system.CaptureSnapshot());
+    Advance(system, 1); Advance(restored, 1);
+    Assert(system.TopologyVersion == version + 1);
+    Assert(system.CaptureSnapshot().ObservedWorldTopologyVersion == world.TopologyVersion);
+    Assert(JsonSerializer.Serialize(system.CaptureSnapshot()) == JsonSerializer.Serialize(restored.CaptureSnapshot()));
+    Assert(world.BuildFloor(2).Success);
+    paused = JsonSerializer.Serialize(system.CaptureSnapshot());
+    Assert(system.CanReach(2, 0, 2, 4) && system.CanReach(2, 0, 2, 4));
+    Assert(JsonSerializer.Serialize(system.CaptureSnapshot()) == paused);
+    Assert(system.RequestJourney(2, 2, 0, 2, 4).Success);
+    Assert(system.TopologyVersion == version + 2);
+    Until(system, () => system.Journeys.All(j => j.State == JourneyState.Arrived));
+    Assert(system.TopologyVersion == version + 2);
+}
+
+void CoordinatedGeometry()
+{
+    var world = World(5); var system = new TransportSystem(world);
+    Assert(system.InstallBank(new(1, 1, 0, 5, [0, 5])).Success);
+    var cash = world.CashMinor;
+    Assert(!system.AddCar(1, 2, 1, 100).Success && !system.AddCar(1, 1, 2, 100).Success);
+    Assert(!system.AddCar(1, 2, ConstructionWorld.Width, 100).Success && world.CashMinor == cash);
+    Assert(system.AddCar(1, 2, 2, 100).Success && world.CashMinor == cash - 100);
+    Assert(system.Banks[0].CarCount == 2 && system.Banks[0].AvailableCarCount == 2);
+    Assert(system.Cars.Select(car => car.X).SequenceEqual([1, 2]) && system.Cars.All(car => car.CarId == car.ShaftId));
+    Assert(system.Occupies(2, 3) && !system.BuildStair(1, 2).Success);
+    Assert(!system.InstallBank(new(2, 2, 0, 5, [0, 5])).Success);
+    system.Banks[0].Definition.AdditionalShafts![0] = new(2, 7);
+    Assert(system.Cars[1].X == 2 && system.Banks[0].Definition.AdditionalShafts![0].X == 2);
+    Assert(!system.RemoveCar(1, 1).Success && system.RemoveCar(1, 2).Success && !system.Occupies(2, 3));
+}
+
+void CoordinatedTransfer()
+{
+    var system = new TransportSystem(World(6));
+    Assert(system.InstallBank(new(1, 1, 0, 3, [0, 3], 2, 2, 2)).Success);
+    Assert(system.AddCar(1, 2, 2).Success);
+    Assert(system.InstallBank(new(2, 5, 3, 6, [3, 6], 3, 2, 2)).Success);
+    var used = Enumerable.Range(1, 24).ToDictionary(id => (long)id, _ => new HashSet<int>());
+    var cars = new HashSet<(int, int)>(); var walked = new HashSet<long>();
+    for (var id = 1; id <= 24; id++) Assert(system.RequestJourney(id, 0, 0, 6, 7, patienceTicks: 5000).Success);
+    for (var tick = 0; tick < 2500 && system.Journeys.Any(j => j.State != JourneyState.Arrived); tick++)
+    {
+        Advance(system, 1); Assert(system.Journeys.Count == 24);
+        foreach (var car in system.Cars.Where(car => car.PassengerCount > 0))
+        {
+            cars.Add((car.BankId, car.CarId)); foreach (var id in car.PassengerIds) used[id].Add(car.BankId);
+        }
+        foreach (var person in system.Journeys.Where(j => j.State == JourneyState.Walking && j.Floor == 3 && j.X > 2 && j.X < 5)) walked.Add(person.PersonId);
+    }
+    Assert(system.Journeys.All(j => j.State == JourneyState.Arrived && j.TransferCount == 1 && j.RemainingRoute!.Count == 0));
+    Assert(used.Values.All(banks => banks.SetEquals([1, 2])) && walked.Count == 24);
+    Assert(cars.SetEquals([(1, 1), (1, 2), (2, 1)]) && system.Metrics.WaitSampleCount == 48 && system.Metrics.AbandonedTrips == 0);
+}
+
+void AssignedApproach()
+{
+    var system = new TransportSystem(World(2));
+    Assert(system.InstallBank(new(1, 1, 0, 2, [0, 2], 1)).Success);
+    Assert(system.AddCar(1, 2, 5).Success);
+    Assert(system.RequestJourney(1, 0, 1, 2, 1).Success && system.RequestJourney(2, 0, 1, 2, 1).Success);
+    Advance(system, 1);
+    var approaching = system.JourneyFor(2)!;
+    Assert(approaching.State == JourneyState.Walking && approaching.CarId == 2 && approaching.X == 1);
+    Assert(approaching.RemainingRoute![0] == new RouteLeg(RouteKind.Walk, 0, 1, 0, 5));
+    Advance(system, 2);
+    Assert(system.JourneyFor(2)!.X == 3 && system.JourneyFor(2)!.State == JourneyState.Walking);
+    Until(system, () => system.JourneyFor(2)!.State == JourneyState.Riding);
+    Assert(system.JourneyFor(2)!.X == 5 && system.Cars.Single(car => car.CarId == 2).PassengerIds.Contains(2));
+    Until(system, () => system.Journeys.All(j => j.State == JourneyState.Arrived));
+    Assert(system.Journeys.All(j => j.X == 1 && j.CarId == null));
+}
+
+void CoordinatedCancellation()
+{
+    var system = new TransportSystem(World(3));
+    Assert(system.InstallBank(new(1, 1, 0, 3, [0, 3], 1)).Success);
+    Assert(system.AddCar(1, 2, 5).Success);
+    for (var id = 1; id <= 8; id++) Assert(system.RequestJourney(id, 0, 1, 3, 1, patienceTicks: 1000).Success);
+    Advance(system, 1);
+    Assert(system.JourneyFor(2)!.State == JourneyState.Walking && system.CancelJourney(2).Success);
+    var cancelledX = system.JourneyFor(2)!.X;
+    Until(system, () => system.Journeys.Where(j => j.PersonId != 2).All(j => j.State == JourneyState.Arrived));
+    Assert(system.JourneyFor(2)!.State == JourneyState.Abandoned && system.JourneyFor(2)!.X == cancelledX);
+    Assert(system.Metrics.WaitSampleCount == 7 && system.Cars.All(car => !car.PassengerIds.Contains(2)));
+}
+
+void IndividualOutage()
+{
+    var system = new TransportSystem(World(5));
+    Assert(system.InstallBank(new(1, 1, 0, 5, [0, 5], 2, 10, 2)).Success && system.AddCar(1, 2, 2).Success);
+    for (var id = 1; id <= 12; id++) Assert(system.RequestJourney(id, 0, 1, 5, 1, patienceTicks: 5000).Success);
+    Until(system, () => system.Cars.All(car => car.State == CarState.Traveling && car.PassengerCount > 0));
+    var car = system.Cars.Single(car => car.CarId == 2); var riders = car.PassengerIds.ToArray(); var position = car.DrawFloor;
+    Assert(system.SetCarOutOfService(1, 2, true).Success);
+    Assert(system.Cars.Single(car => car.CarId == 2).DrawFloor == position && riders.All(id => system.JourneyFor(id)!.State == JourneyState.Riding));
+    Assert(system.Banks[0].AvailableCarCount == 1 && !system.Banks[0].IsOutOfService);
+    Until(system, () => system.Journeys.All(j => j.State == JourneyState.Arrived), 5000);
+    Assert(system.Cars.Single(car => car.CarId == 2).State == CarState.OutOfService && system.Metrics.AbandonedTrips == 0);
+    Assert(system.SetBankOutOfService(1, true).Success && system.SetCarOutOfService(1, 2, false).Success);
+    Assert(system.Banks[0].AvailableCarCount == 0);
+    Assert(system.SetBankOutOfService(1, false).Success && system.Banks[0].AvailableCarCount == 2);
+}
+
+void ReassignmentAge()
+{
+    var system = new TransportSystem(World(5));
+    Assert(system.InstallBank(new(1, 1, 0, 5, [0, 5], 1, 10, 2)).Success && system.AddCar(1, 2, 2).Success);
+    for (var id = 1; id <= 6; id++) Assert(system.RequestJourney(id, 0, 1, 5, 1, patienceTicks: 5000).Success);
+    Until(system, () => system.Cars.All(car => car.State == CarState.Traveling));
+    var waiting = system.Journeys.First(j => j.State == JourneyState.Waiting && j.CarId == 2);
+    var age = waiting.WaitSinceTick;
+    Assert(system.SetCarOutOfService(1, 2, true).Success);
+    Until(system, () => system.JourneyFor(waiting.PersonId) is { State: JourneyState.Waiting, CarId: 1 });
+    Assert(system.JourneyFor(waiting.PersonId)!.WaitSinceTick == age);
+    Until(system, () => system.Journeys.All(j => j.State == JourneyState.Arrived), 5000);
+}
+
+void CoordinatedEdits()
+{
+    var system = new TransportSystem(World(3));
+    Assert(system.InstallBank(new(1, 1, 0, 3, [0, 3], 1)).Success && system.AddCar(1, 2, 4).Success);
+    Assert(system.RequestJourney(1, 0, 1, 3, 1).Success && system.RequestJourney(2, 0, 1, 3, 1).Success);
+    Advance(system, 1); var before = JsonSerializer.Serialize(system.CaptureSnapshot());
+    Assert(!system.RemoveCar(1, 2).Success && !system.RemoveBank(1).Success);
+    Assert(JsonSerializer.Serialize(system.CaptureSnapshot()) == before);
+    Until(system, () => system.Cars.Any(car => car.State == CarState.Traveling)); before = JsonSerializer.Serialize(system.CaptureSnapshot());
+    Assert(!system.ConfigureBank(system.Banks[0].Definition with { Capacity = 2 }).Success);
+    Assert(!system.RemoveBank(1, true).Success && JsonSerializer.Serialize(system.CaptureSnapshot()) == before);
+    Until(system, () => system.Journeys.All(j => j.State == JourneyState.Arrived));
+    Assert(system.RemoveCar(1, 2).Success && system.Cars.Count == 1);
+}
+
+void RouteDiagnostics()
+{
+    var system = new TransportSystem(World(6));
+    Assert(system.InstallBank(new(1, 1, 0, 3, [0, 3], ServiceOnly: true)).Success);
+    Assert(system.AddCar(1, 2, 2).Success && system.InstallBank(new(2, 5, 3, 6, [3, 6], ServiceOnly: true)).Success);
+    var before = JsonSerializer.Serialize(system.CaptureSnapshot());
+    Assert(system.DiagnoseRoute(0, 0, 6, 7).Status == RouteStatus.AccessDenied);
+    var service = system.DiagnoseRoute(0, 0, 6, 7, true);
+    Assert(service.Status == RouteStatus.Reachable && service.Route.Count(leg => leg.Kind == RouteKind.Elevator) == 2);
+    Assert(system.DiagnoseRoute(0, 0, 2, 7, true).Status == RouteStatus.Disconnected);
+    Assert(JsonSerializer.Serialize(system.CaptureSnapshot()) == before);
+    Assert(system.SetBankOutOfService(2, true).Success);
+    Assert(system.DiagnoseRoute(0, 0, 6, 7, true).Status == RouteStatus.TemporarilyUnavailable);
+    Assert(system.DiagnoseRoute(0, 0, 6, 7).Status == RouteStatus.AccessDenied);
+}
+
+void CoordinatedSave()
+{
+    var world = World(6); var system = new TransportSystem(world);
+    Assert(system.InstallBank(new(1, 1, 0, 3, [0, 3], 2)).Success && system.AddCar(1, 2, 4).Success);
+    Assert(system.InstallBank(new(2, 7, 3, 6, [3, 6], 1)).Success);
+    for (var id = 1; id <= 16; id++) Assert(system.RequestJourney(id, 0, 1, 6, 8, patienceTicks: 5000).Success);
+    Advance(system, 1);
+    Assert(system.Journeys.Any(j => j.State == JourneyState.Walking && j.CarId == 2));
+    var restored = TransportSystem.RestoreSnapshot(world, system.CaptureSnapshot());
+    for (var tick = 0; tick < 1000; tick++)
+    {
+        Advance(system, 1); Advance(restored, 1);
+        Assert(JsonSerializer.Serialize(system.CaptureSnapshot()) == JsonSerializer.Serialize(restored.CaptureSnapshot()), $"Coordinated save diverged at tick {system.CurrentTick}.");
+        if (tick is 10 or 80 or 180) restored = TransportSystem.RestoreSnapshot(world, restored.CaptureSnapshot());
+    }
+    Assert(system.Journeys.All(j => j.State == JourneyState.Arrived && j.TransferCount == 1));
+}
+
+void BankPressure()
+{
+    var system = new TransportSystem(World(3));
+    Assert(system.InstallBank(new(1, 1, 0, 3, [0, 3], 1)).Success);
+    Assert(system.InstallBank(new(2, 8, 0, 3, [0, 3], 200, ServiceOnly: true)).Success);
+    Assert(system.RequestJourney(1, 0, 1, 3, 1).Success && system.RequestJourney(2, 0, 1, 3, 1).Success);
+    Assert(system.Metrics.OverloadedFloors.SequenceEqual([0]));
+    Assert(system.AddCar(1, 2, 2).Success && system.Metrics.OverloadedFloors.Count == 0);
+    Assert(system.SetCarOutOfService(1, 2, true).Success && system.Metrics.OverloadedFloors.SequenceEqual([0]));
+}
+
+void CapacityEntry()
+{
+    foreach (var restore in new[] { false, true })
+    {
+        var world = World(5); var system = new TransportSystem(world);
+        Assert(system.InstallBank(new(1, 1, 0, 5, [0, 5], 1, 10, 2)).Success);
+        if (restore) Assert(system.AddCar(1, 2, 5).Success && system.SetCarOutOfService(1, 2, true).Success);
+        for (var id = 1; id <= 6; id++) Assert(system.RequestJourney(id, 0, 1, 5, 1, patienceTicks: 5000).Success);
+        Until(system, () => system.Cars.Single(car => car.CarId == 1).State == CarState.Traveling);
+        var queued = system.Journeys.Where(j => j.State == JourneyState.Waiting).ToArray();
+        Assert(queued.Length == 5 && queued.All(j => j.CarId == 1));
+        Assert((restore ? system.SetCarOutOfService(1, 2, false) : system.AddCar(1, 2, 5)).Success);
+        foreach (var previous in queued)
+        {
+            var current = system.JourneyFor(previous.PersonId)!;
+            Assert(current.State == JourneyState.Waiting && current.CarId == null && current.X == previous.X
+                && current.WaitSinceTick == previous.WaitSinceTick);
+        }
+        var resumed = TransportSystem.RestoreSnapshot(world, system.CaptureSnapshot());
+        var newCarUsed = false; var approached = false;
+        for (var tick = 0; tick < 1500 && system.Journeys.Any(j => j.State != JourneyState.Arrived); tick++)
+        {
+            Advance(system, 1); Advance(resumed, 1);
+            Assert(JsonSerializer.Serialize(system.CaptureSnapshot()) == JsonSerializer.Serialize(resumed.CaptureSnapshot()));
+            foreach (var previous in queued)
+            {
+                var current = system.JourneyFor(previous.PersonId)!;
+                if (current.State == JourneyState.Waiting) Assert(current.WaitSinceTick == previous.WaitSinceTick);
+                if (current.State == JourneyState.Walking && current.CarId == 2 && current.Floor == 0 && current.X > 1 && current.X < 5)
+                    approached = true;
+                if (current.State == JourneyState.Riding && current.CarId == 2) { Assert(current.X == 5); newCarUsed = true; }
+            }
+        }
+        Assert(newCarUsed && approached && system.Journeys.All(j => j.State == JourneyState.Arrived));
+        Assert(system.Metrics.WaitSampleCount == 6 && system.Metrics.AbandonedTrips == 0);
+    }
+    var approachingSystem = new TransportSystem(World(2));
+    Assert(approachingSystem.InstallBank(new(1, 1, 0, 2, [0, 2], 1)).Success && approachingSystem.AddCar(1, 2, 5).Success);
+    Assert(approachingSystem.RequestJourney(1, 0, 1, 2, 1).Success && approachingSystem.RequestJourney(2, 0, 1, 2, 1).Success);
+    Advance(approachingSystem, 2);
+    var approachBefore = approachingSystem.JourneyFor(2)!;
+    Assert(approachBefore.State == JourneyState.Walking && approachBefore.CarId == 2);
+    Assert(approachingSystem.AddCar(1, 3, 8).Success);
+    var approachAfter = approachingSystem.JourneyFor(2)!;
+    Assert(approachAfter.State == JourneyState.Walking && approachAfter.CarId == 2 && approachAfter.X == approachBefore.X
+        && approachAfter.RemainingRoute!.SequenceEqual(approachBefore.RemainingRoute!));
+}
+
+void ReinstalledShaft()
+{
+    var world = World(3); var system = new TransportSystem(world);
+    Assert(system.InstallBank(new(1, 1, 0, 3, [0, 3], 1, 10, 2)).Success && system.AddCar(1, 2, 5).Success);
+    Assert(system.SetCarOutOfService(1, 1, true).Success && system.RequestJourney(1, 0, 1, 3, 1).Success);
+    Until(system, () => system.JourneyFor(1) is { State: JourneyState.Waiting, CarId: 2 });
+    var before = system.JourneyFor(1)!; Assert(before.X == 5);
+    Assert(system.RemoveBank(1, true).Success);
+    Assert(system.InstallBank(new(1, 2, 0, 3, [0, 3], 1, 10, 2, AdditionalShafts: [new(2, 7)])).Success);
+    Assert(system.SetCarOutOfService(1, 1, true).Success);
+    var resumed = TransportSystem.RestoreSnapshot(world, system.CaptureSnapshot());
+    Advance(system, 1); Advance(resumed, 1);
+    Assert(system.JourneyFor(1) is { State: JourneyState.Walking, X: 5, CarId: 2 });
+    Advance(system, 1); Advance(resumed, 1);
+    Assert(system.JourneyFor(1) is { State: JourneyState.Walking, X: 6 });
+    Until(system, () => system.JourneyFor(1)!.State == JourneyState.Riding);
+    Advance(resumed, (int)(system.CurrentTick - resumed.CurrentTick));
+    Assert(JsonSerializer.Serialize(system.CaptureSnapshot()) == JsonSerializer.Serialize(resumed.CaptureSnapshot()));
+    Assert(system.JourneyFor(1)!.X == 7 && system.Metrics.WaitSampleCount == 1);
+    Assert(system.Metrics.AverageWaitTicks == system.CurrentTick - before.WaitSinceTick);
+    Until(system, () => system.JourneyFor(1)!.State == JourneyState.Arrived);
+    Assert(system.JourneyFor(1)!.X == 1);
+}
+
+void ApproachHandoff()
+{
+    foreach (var restore in new[] { false, true })
+    {
+        var world = World(5); var system = new TransportSystem(world);
+        Assert(system.InstallBank(new(1, 1, 0, 5, [0, 5], 1, 10, 2)).Success && system.AddCar(1, 2, 8).Success);
+        if (restore) Assert(system.AddCar(1, 3, 12).Success && system.SetCarOutOfService(1, 3, true).Success);
+        Advance(system, 10);
+        Assert(system.RequestJourney(1, 0, 1, 5, 1).Success && system.RequestJourney(2, 0, 1, 5, 1).Success);
+        Advance(system, 2);
+        var before = system.JourneyFor(2)!;
+        var originalWaitSince = system.CaptureSnapshot().Journeys.Single(j => j.PersonId == 2).WaitSinceTick;
+        Assert(before.State == JourneyState.Walking && before.CarId == 2 && before.X > 1 && before.X < 3 && originalWaitSince == 10,
+            "Fixture must start with an assigned in-progress approach and an established hall request age.");
+        Assert((restore ? system.SetCarOutOfService(1, 3, false) : system.AddCar(1, 3, 12)).Success);
+        var resumed = TransportSystem.RestoreSnapshot(world, system.CaptureSnapshot());
+        var previousX = before.X; var reachedShaft = false;
+        for (var tick = 0; tick < 100 && system.JourneyFor(2)!.State != JourneyState.Riding; tick++)
+        {
+            Advance(system, 1); Advance(resumed, 1);
+            Assert(JsonSerializer.Serialize(system.CaptureSnapshot()) == JsonSerializer.Serialize(resumed.CaptureSnapshot()));
+            var current = system.JourneyFor(2)!;
+            Assert(current.CarId == 2, "Capacity change dropped the existing approach commitment at its handoff.");
+            Assert(current.Floor == 0 && current.X >= previousX && current.X <= 8,
+                "A committed approach must reach its actual shaft without walking back or teleporting.");
+            Assert(system.CaptureSnapshot().Journeys.Single(j => j.PersonId == 2).WaitSinceTick == originalWaitSince,
+                "The original hall request age must survive the completed approach.");
+            if (current.State == JourneyState.Waiting)
+            {
+                Assert(current.X == 8 && current.WaitSinceTick == originalWaitSince);
+                if (!reachedShaft) resumed = TransportSystem.RestoreSnapshot(world, resumed.CaptureSnapshot());
+                reachedShaft = true;
+            }
+            previousX = current.X;
+        }
+        Assert(reachedShaft && system.JourneyFor(2) is { State: JourneyState.Riding, CarId: 2, X: 8 });
+        Assert(system.JourneyFor(2)!.TotalWaitTicks == system.CurrentTick - originalWaitSince);
+        Until(system, () => system.Journeys.All(j => j.State == JourneyState.Arrived));
+        Assert(system.Metrics.WaitSampleCount == 2 && system.Metrics.AbandonedTrips == 0);
+    }
 }
 
 static void Assert(bool condition, string message = "Assertion failed") { if (!condition) throw new InvalidOperationException(message); }

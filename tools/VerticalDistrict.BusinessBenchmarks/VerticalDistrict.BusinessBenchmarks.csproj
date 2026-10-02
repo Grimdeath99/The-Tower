@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(BaselineCore)' == ''">
+    <ProjectReference Include="../../src/VerticalDistrict.Core/VerticalDistrict.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(BaselineCore)' != ''">
+    <Reference Include="VerticalDistrict.Core"><HintPath>$(BaselineCore)</HintPath></Reference>
+  </ItemGroup>
+</Project>

@@ -8,6 +8,7 @@ public partial class Main
 {
     public long? SelectedPersonId { get; private set; }
     public int? SelectedBankId { get; private set; }
+    public int? SelectedCarId { get; private set; }
     private AcceptDialog _peopleDialog = null!;
     private ItemList _peopleList = null!;
     private LineEdit _peopleSearch = null!;
@@ -52,18 +53,18 @@ public partial class Main
 
     public void SelectPerson(long id)
     {
-        SelectedId = null; SelectedBankId = null; SelectedPersonId = id;
+        SelectedId = null; SelectedBankId = null; SelectedCarId = null; SelectedPersonId = id;
         SetTool("select"); Refresh();
     }
 
-    public void SelectBank(int id)
+    public void SelectBank(int id, int carId = 1)
     {
-        SelectedId = null; SelectedPersonId = null; SelectedBankId = id;
+        SelectedId = null; SelectedPersonId = null; SelectedBankId = id; SelectedCarId = carId;
         SetTool("select"); Refresh();
     }
 
     private void ClearEntitySelection()
-    { SelectedId = null; SelectedPersonId = null; SelectedBankId = null; }
+    { SelectedId = null; SelectedPersonId = null; SelectedBankId = null; SelectedCarId = null; }
 
     private void LocateSelectedPerson()
     {
@@ -74,7 +75,7 @@ public partial class Main
     private void LocateSelection()
     {
         if (SelectedPersonId is { } person) Canvas.FocusPerson(person);
-        else if (SelectedBankId is { } bank) Canvas.FocusBank(bank);
+        else if (SelectedBankId is { } bank) Canvas.FocusBank(bank, SelectedCarId ?? 1);
     }
 
     private static string ClockAt(long tick)
@@ -96,12 +97,20 @@ public partial class Main
             $"Entered: {ClockAt(p.CreatedAt)}", $"Satisfaction: {p.Satisfaction}%"
         };
         if (journey.BankId.HasValue) lines.Add($"Elevator bank: {journey.BankId}");
+        if (journey.CarId.HasValue) lines.Add($"Assigned car: {journey.CarId}");
+        lines.Add($"Completed transfers in this journey: {journey.TransferCount}");
+        if (journey.RemainingRoute is { Count: > 0 } route)
+            lines.Add("Remaining route (highlighted in the cutaway):\n" + string.Join("\n", route.Select(leg =>
+                leg.Kind == RouteKind.Elevator ? $"Bank {leg.BankId}: {FloorName(leg.FromFloor)} → {FloorName(leg.ToFloor)}"
+                : leg.Kind == RouteKind.Stair ? $"Stairs/escalator: {FloorName(leg.FromFloor)} → {FloorName(leg.ToFloor)}"
+                : $"Walk on {FloorName(leg.FromFloor)}: bay {leg.FromX} → {leg.ToX}")));
         if (journey.State == JourneyState.Waiting)
             lines.Add($"Current wait: {view.CurrentWaitTicks}s / {view.PatienceTicks}s patience");
         lines.Add($"This journey's accumulated wait: {journey.TotalWaitTicks + view.CurrentWaitTicks}s");
         if (view.NextActionTick.HasValue) lines.Add("Next scheduled action: " + ClockAt(view.NextActionTick.Value));
         if (journey.State is JourneyState.Unreachable or JourneyState.Abandoned || p.Activity == PersonActivity.Stranded)
-            lines.Add("No accessible route. Restore a connection or service; this person retries from their last safe location.");
+            lines.Add(Session.Transport.DiagnoseRoute(journey.Floor, (int)journey.X, journey.DestinationFloor,
+                journey.DestinationX, journey.Service).Reason + " This person retries from their last safe location.");
         return string.Join("\n", lines);
     }
 
@@ -118,18 +127,19 @@ public partial class Main
         if (SelectedBankId is not { } bankId) return false;
         var view = Session.InspectBank(bankId);
         if (view == null) { _inspector.Text = $"Elevator bank {bankId}\nThis bank has been removed."; return true; }
-        var car = view.Car; var definition = view.Bank.Definition;
+        var car = view.Cars.FirstOrDefault(c => c.CarId == SelectedCarId) ?? view.Car; var definition = view.Bank.Definition;
         _locateSelection.Disabled = false;
         _manageSelection.Disabled = false; _manageSelection.Text = "Configure selected bank";
         var stops = string.Join(", ", definition.Stops.Select(FloorName));
         var hallCalls = view.HallCalls.Count == 0 ? "No waiting hall calls" : string.Join("\n", view.HallCalls.Select(q =>
             $"{FloorName(q.Floor)} {(q.Direction > 0 ? "↑" : "↓")}: {q.WaitingCount} waiting · oldest {q.OldestWaitTicks}s"));
-        _inspector.Text = $"ELEVATOR {bankId}\n{car.State}\nFloor {car.DrawFloor:0.0} → {FloorName(car.TargetFloor)}\n" +
+        _inspector.Text = $"BANK {bankId} · CAR {car.CarId}\nShaft {car.ShaftId} · bay {car.X}\n{car.State}\nFloor {car.DrawFloor:0.0} → {FloorName(car.TargetFloor)}\n" +
             $"Passengers {car.PassengerCount}/{car.Capacity}\nServed: {stops}\n" +
+            $"Bank fleet: {view.Bank.AvailableCarCount}/{view.Bank.CarCount} available\n" +
             $"Travel {definition.TravelTicksPerFloor}s/floor · doors {definition.DoorTicks}s\n" +
             (definition.ServiceOnly ? "Service staff only" : "Public and service access") +
             "\n\n" + hallCalls + "\n\nOnboard IDs: " + (car.PassengerIds.Count == 0 ? "none" : string.Join(", ", car.PassengerIds.Select(id => "#" + id))) +
-            "\nRequested stops: " + (view.PassengerStops.Count == 0 ? "none" : string.Join(", ", view.PassengerStops.Select(FloorName)));
+            "\nBank requested stops: " + (view.PassengerStops.Count == 0 ? "none" : string.Join(", ", view.PassengerStops.Select(FloorName)));
         return true;
     }
 
@@ -188,7 +198,7 @@ public partial class Main
         {
             var location = _locations.Locations[_citySelect.Selected];
             _newLocationId = location.Id; _newSiteId = location.Sites[_siteSelect.Selected].Id; _newSandbox = false;
-            _resetCommute = true; _newGame.Hide(); _reset.PopupCentered();
+            _resetTransfer = false; _resetCommute = true; _newGame.Hide(); _reset.PopupCentered();
         }));
     }
 

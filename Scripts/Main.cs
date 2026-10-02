@@ -161,6 +161,7 @@ public partial class Main : Control
         body.AddThemeConstantOverride("separation", 0);
         page.AddChild(body);
         var library = new VBoxContainer();
+        library.AddThemeConstantOverride("separation", 6);
         var left = Panel(library);
         left.CustomMinimumSize = new Vector2(244, 0);
         body.AddChild(left);
@@ -171,15 +172,16 @@ public partial class Main : Control
         _search = new LineEdit { PlaceholderText = "Search rooms…", ClearButtonEnabled = true };
         _search.TextChanged += _ => RefreshRoomList();
         library.AddChild(_search);
+        BuildCatalogueFilters(library);
         var scroll = new ScrollContainer { SizeFlagsVertical = SizeFlags.ExpandFill, HorizontalScrollMode = ScrollContainer.ScrollMode.Disabled };
         _roomList = new VBoxContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill };
         scroll.AddChild(_roomList);
         library.AddChild(scroll);
         RefreshRoomList();
         library.AddChild(Text("03   SITE TOOLS", 11, Muted));
-        AddTool(library, "select", "V   Inspect", "Select a room or slab to inspect it.");
-        AddTool(library, "demolish", "X   Demolish", "Remove rooms for a 50% salvage refund. Empty outside slabs have no refund.");
-        library.AddChild(Wrap("Build a lobby and connect upper floors. Keep services staffed. F6 saves; F9 opens saved districts.", 12, Muted));
+        var siteTools = new HBoxContainer(); library.AddChild(siteTools);
+        AddTool(siteTools, "select", "Inspect", "V: select a room or slab to inspect it.");
+        AddTool(siteTools, "demolish", "Demolish", "X: remove rooms for a 50% salvage refund. Empty outside slabs have no refund.");
 
         var center = new VBoxContainer { SizeFlagsHorizontal = SizeFlags.ExpandFill };
         center.AddThemeConstantOverride("separation", 0);
@@ -229,11 +231,11 @@ public partial class Main : Control
         shortcuts.CustomMinimumSize = new Vector2(0, 32);
         page.AddChild(shortcuts);
         _reset = new ConfirmationDialog { Title = "Start a new district?", DialogText = "Unsaved changes in the current district will be discarded. Use Save before starting over.", MinSize = new Vector2I(440, 140) };
-        _reset.Confirmed += () => { if (_resetCommute) StartOfficeCommute(); else StartSite(_resetExample); };
+        _reset.Confirmed += () => { if (_resetTransfer) StartTransferScenario(); else if (_resetCommute) StartOfficeCommute(); else StartSite(_resetExample); };
         AddChild(_reset);
     }
 
-    private void AddTool(VBoxContainer target, string id, string caption, string hint)
+    private void AddTool(Container target, string id, string caption, string hint)
     {
         var b = Button(caption, () => SetTool(id), hint);
         b.Alignment = HorizontalAlignment.Left;
@@ -244,9 +246,11 @@ public partial class Main : Control
     private void RefreshRoomList()
     {
         foreach (var child in _roomList.GetChildren()) { _roomList.RemoveChild(child); child.QueueFree(); }
-        foreach (var d in Catalog.Definitions.Where(d => string.IsNullOrWhiteSpace(_search.Text) || (d.Name + d.Category).Contains(_search.Text, StringComparison.OrdinalIgnoreCase)))
+        foreach (var d in FilteredCatalogue())
         {
-            var b = Button($"{d.Name}\n{d.Width} × {d.Height}  ·  {Money(d.CostMinor)}", () => SetTool("room", d.Id), d.Description);
+            var gate = CatalogueGate(d);
+            var b = Button($"{d.Name}\n{d.Width} × {d.Height}  ·  {Money(d.CostMinor)}" + (gate.Length > 0 ? "\nLocked" : ""),
+                () => { if (gate.Length == 0) SetTool("room", d.Id); else OpenCatalogueEntry(d.Id); }, CatalogueDescription(d));
             b.Alignment = HorizontalAlignment.Left;
             b.CustomMinimumSize = new Vector2(210, 62);
             b.AddThemeFontSizeOverride("font_size", 14);
@@ -255,7 +259,7 @@ public partial class Main : Control
             b.Name = d.Id;
             _roomList.AddChild(b);
         }
-        if (_roomList.GetChildCount() == 0) _roomList.AddChild(Wrap("No matching room shells.", 14, Muted));
+        if (_roomList.GetChildCount() == 0) _roomList.AddChild(Wrap("No matching facilities.", 14, Muted));
     }
     public void SetTool(string tool, string? definition = null)
     {
@@ -271,7 +275,7 @@ public partial class Main : Control
             _ => "Select a room, person or elevator to inspect it. People lists riders and off-screen workers. Space pauses time." });
         Canvas.QueueRedraw();
     }
-    private void ConfirmReset(bool example) { _resetCommute = false; _resetExample = example; _reset.PopupCentered(); }
+    private void ConfirmReset(bool example) { _resetTransfer = false; _resetCommute = false; _resetExample = example; _reset.PopupCentered(); }
     private void StartSite(bool example)
     {
         Session = example
@@ -329,8 +333,13 @@ public partial class Main : Control
     public static string FloorName(int floor) => floor == 0 ? "G" : floor < 0 ? "B" + -floor : floor.ToString("00");
     private void Refresh()
     {
+        RefreshCatalogueUnlocks();
         _funds.Text = Money(World.CashMinor);
-        _summary.Text = $"{World.Floors.Count} FLOORS   /   {World.Rooms.Count} FACILITIES   /   {Session.Population} PEOPLE";
+        var tenants = Session.Tenants.Where(t => t.Status is TenancyStatus.Active or TenancyStatus.Notice).ToArray();
+        var assignedResidents = tenants.Where(t => t.Kind == "Home").Sum(t => t.MemberIds.Length)
+            + Session.Ownerships.Where(o => o.Status == CondoOwnershipStatus.Owned).Sum(o => o.ResidentIds.Length);
+        _summary.Text = $"{World.Floors.Count} FLOORS · {World.Rooms.Count} FACILITIES · {Session.PhysicalPopulation} PHYSICALLY INSIDE\n" +
+            $"{tenants.Count(t => t.Kind == "Office")} OFFICE LEASES · {assignedResidents} RESIDENTS · {Session.HotelBookings.Count(b => b.Status is HotelBookingStatus.Reserved or HotelBookingStatus.CheckedIn)} BOOKINGS · {Session.ActiveComplaints.Count} WARNINGS";
         RefreshOperationsHud();
         var room = World.Rooms.FirstOrDefault(r => r.Id == SelectedId);
         _demolishSelection.Disabled = room == null;
@@ -353,6 +362,7 @@ public partial class Main : Control
         RefreshPeopleBrowser();
         RefreshFinances();
         RefreshReports();
+        RefreshManagementLoop();
         Canvas.QueueRedraw();
     }
     public override void _UnhandledKeyInput(InputEvent @event)
@@ -422,7 +432,11 @@ public partial class Main : Control
             VerifyInterfaceTextScaling();
             await VerifyOfficeCommuteInspection();
             await VerifyFinanceInspection();
-            GD.Print("CONSTRUCTION_SMOKE_PASS: scene, catalogue, viewport input, atomic construction, selection, salvage, UI isolation, camera, office journeys, save/load, transport controls, reports, text scaling, commute scenario, person/car selection, rider inspection, paused inspection invariance, finance overview, transactions, scheduled bills, midnight save continuity.");
+            await VerifyManagementLoopInspection();
+            await VerifyOwnershipInspection();
+            await VerifyRetailInspection();
+            await VerifyTransferInspection();
+            GD.Print("CONSTRUCTION_SMOKE_PASS: scene, catalogue, viewport input, atomic construction, selection, salvage, UI isolation, camera, office journeys, save/load, transport controls, reports, text scaling, commute scenario, person/car selection, rider inspection, paused inspection invariance, finance overview, transactions, scheduled bills, midnight save continuity, twenty-floor management, service tasks, demand, satisfaction, progression, live contracts, ownership transactions and repurchase controls, catalogue categories and site filters.");
             GetTree().Quit();
         }
         catch (Exception ex) { GD.PushError("CONSTRUCTION_SMOKE_FAIL: " + ex); GetTree().Quit(1); }

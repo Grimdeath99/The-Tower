@@ -129,7 +129,7 @@ public sealed class LocationCatalog
             }
             Require(item.Demand is not null && item.Demand.Residential == 1 && item.Demand.Office == 1
                 && item.Demand.Retail == 1 && item.Demand.Hotel == 1 && item.Demand.Status == "ProvisionalNeutral",
-                $"{item.Id}: only provisional neutral demand metadata is supported; operating demand is not implemented.");
+                $"{item.Id}: this release uses provisional neutral location modifiers; non-neutral geographic balance is not approved.");
             Require(item.Sources is { Length: > 0 }, $"{item.Id}: authoritative source provenance is required.");
             var sources = new List<NetworkSource>();
             foreach (var source in item.Sources!)

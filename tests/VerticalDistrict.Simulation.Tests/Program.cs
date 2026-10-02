@@ -513,6 +513,7 @@ cases.Add(("Office commute late-arrival fixture departs physically after the shi
     Check(late.World.Ledger.All(e => e.Category != "Lease.Office"), "A closed-shift late arrival earned office rent.");
 }));
 
+TransferCases.Register(cases, catalog, rules, locations);
 var failures = 0;
 var selected = cases.Where(c => args.Length == 0 || c.Name.Contains(args[0], StringComparison.OrdinalIgnoreCase)).ToArray();
 foreach (var (name, test) in selected)

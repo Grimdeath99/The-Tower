@@ -134,6 +134,7 @@ public partial class TowerCanvas : Control
             DrawOverlay(room, def);
         }
         DrawTransport();
+        DrawSelectedRoute();
         DrawPeople();
         DrawStreet(width);
         DrawPreview();
@@ -211,6 +212,30 @@ public partial class TowerCanvas : Control
             case "cafe":
                 for (var xx = x + 9; xx < x + w - 22; xx += 30)
                 { Rect(xx, bottom - 16, 19, 4, "c6ad88"); Rect(xx + 8, bottom - 12, 3, 12, "80715d"); Rect(xx - 3, bottom - 9, 5, 8, "b67d69"); Rect(xx + 20, bottom - 9, 5, 8, "b67d69"); }
+                break;
+            case "shop":
+                // Original retail cutaway placeholder: stacked goods and a checkout counter.
+                for (var xx = x + 7; xx < x + w - 43; xx += 26)
+                {
+                    Rect(xx, bottom - 31, 21, 29, "837e70");
+                    foreach (var shelf in new[] { bottom - 25, bottom - 14 })
+                    {
+                        Rect(xx + 1, shelf + 5, 19, 2, "d5c29e");
+                        Rect(xx + 3, shelf - 2, 5, 7, "b88567"); Rect(xx + 11, shelf, 6, 5, "8ab5a5");
+                    }
+                }
+                Rect(x + w - 34, bottom - 19, 27, 17, "b49776"); Rect(x + w - 36, bottom - 21, 31, 3, "dfc6a0");
+                Rect(x + w - 26, bottom - 30, 12, 9, "304e5b"); Rect(x + w - 24, bottom - 28, 8, 4, "8abcb1");
+                break;
+            case "condo":
+                // Original domestic cutaway placeholder: sleeping alcove, sofa and kitchenette.
+                Rect(x + 6, bottom - 23, 3, 22, "775e55"); Rect(x + 9, bottom - 17, 29, 14, "d9c8a7");
+                Rect(x + 10, bottom - 17, 8, 7, "f0e5d1"); Rect(x + 19, bottom - 14, 19, 9, "91b5aa");
+                Rect(x + 42, bottom - 30, 2, 29, "bda98f");
+                Rect(x + 51, bottom - 16, 27, 13, "9c858d"); Rect(x + 49, bottom - 20, 5, 17, "b4a0a4");
+                Rect(x + 54, bottom - 21, 23, 6, "c5b0af"); Rect(x + 79, bottom - 12, 12, 3, "d3b48b");
+                Rect(x + w - 41, bottom - 27, 28, 25, "aa9c83"); Rect(x + w - 43, bottom - 29, 31, 3, "e0ceb0");
+                Rect(x + w - 37, bottom - 27, 11, 2, "47616a"); Rect(x + w - 21, bottom - 24, 1, 17, "766e60");
                 break;
             case "service-room":
                 for (var xx = x + 8; xx < x + w - 18; xx += 23)
@@ -291,27 +316,27 @@ public partial class TowerCanvas : Control
     private void DrawTransport()
     {
         foreach (var bank in OwnerGame.Session.Transport.Banks)
+        foreach (var shaft in OwnerGame.Session.Transport.Cars.Where(car => car.BankId == bank.Definition.Id))
         {
-            var d = bank.Definition; var x = d.X * Bay;
+            var d = bank.Definition; var x = shaft.X * Bay;
             for (var floor = d.MinFloor; floor <= d.MaxFloor; floor++)
             {
                 var y = -(floor + 1) * Story;
                 if (y * Zoom + Origin.Y > Size.Y || (y + Story) * Zoom + Origin.Y < 0) continue;
                 Rect(x, y + 2, Bay, Story - 3, "10252f"); Rect(x + 3, y, 2, Story, "536f77"); Rect(x + Bay - 5, y, 2, Story, "536f77");
                 Rect(x + 11, y, 1, Story, "799395");
-                if (d.Stops.Contains(floor)) { Rect(x + 6, y + 17, Bay - 12, 39, "46636b"); Rect(x + 12, y + 17, 1, 39, "243c47"); Rect(x + 7, y + 10, 9, 3, bank.IsOutOfService ? "e19479" : "91d8b8"); }
+                if (d.Stops.Contains(floor)) { Rect(x + 6, y + 17, Bay - 12, 39, "46636b"); Rect(x + 12, y + 17, 1, 39, "243c47"); Rect(x + 7, y + 10, 9, 3, bank.IsOutOfService || shaft.IsOutOfService ? "e19479" : "91d8b8"); }
             }
         }
         foreach (var car in OwnerGame.Session.Transport.Cars)
         {
-            var bank = OwnerGame.Session.Transport.Banks.First(b => b.Definition.Id == car.BankId).Definition;
-            var y = (float)(-(car.DrawFloor + 1) * Story + 16); var x = bank.X * Bay + 4;
+            var y = (float)(-(car.DrawFloor + 1) * Story + 16); var x = car.X * Bay + 4;
             if (y * Zoom + Origin.Y > Size.Y || (y + 44) * Zoom + Origin.Y < 0) continue;
             Rect(x, y, Bay - 8, 42, car.State == CarState.OutOfService ? "9f6e68" : "a7bfae");
             Rect(x + 2, y + 3, Bay - 12, 34, "486978");
             if (car.State is CarState.Opening or CarState.Unloading or CarState.Boarding) Rect(x + 5, y + 3, Bay - 18, 34, "d2ceaa");
             Caption(new Vector2(x + 3, y + 28), car.PassengerCount.ToString(), 10, C("fff1cd"));
-            if (OwnerGame.SelectedBankId == car.BankId || OwnerGame.SelectedPersonId is { } personId && car.PassengerIds.Contains(personId))
+            if (OwnerGame.SelectedBankId == car.BankId && (OwnerGame.SelectedCarId ?? 1) == car.CarId || OwnerGame.SelectedPersonId is { } personId && car.PassengerIds.Contains(personId))
                 DrawRect(new Rect2(x - 3, y - 3, Bay - 2, 48), C("b1f0cc"), false, 2);
         }
         foreach (var stair in OwnerGame.Session.Transport.Stairs)

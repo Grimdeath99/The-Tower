@@ -12,7 +12,7 @@ public sealed record FinancialSummary(long? Day, long OpeningCashMinor, long Clo
 public sealed record BillingSchedule(long LastSettledDay, long LastSettledTick, long NextDueTick);
 public sealed record ScheduledBill(long RoomId, string Category, long AmountMinor, long BillingDay, long DueTick);
 public sealed record FinancialPeriod(long Day, long FirstSequence, long LastSequence);
-public sealed record BillingObligation(long? RoomId, long AmountMinor, string Category, string Description);
+public sealed record BillingObligation(long? RoomId, long AmountMinor, string Category, string Description, long? TenantId = null);
 public sealed record PendingBillingBatch(long Day, long DueTick, BillingObligation[] Obligations);
 public sealed record FinanceSnapshot(BillingSchedule Billing, long CurrentPeriodFirstSequence,
     FinancialPeriod[] Periods, long LegacyThroughSequence, PendingBillingBatch[] PendingBatches);
@@ -29,7 +29,7 @@ public static class FinanceClassification
         "Lease.Office" or "Lease.Home" or "Sales.Food" or "Sales.Shop" or "Sales.Hotel" or "Sales.Cinema"
             or "Sales.Event" or "Parking.Departure" or "Advertising.Contract"
             when amountMinor >= 0 => FinancialFlowKind.OperatingRevenue,
-        "Operations.Upkeep" or "Operations.FacilityUpkeep" or "Operations.Wages" or "Maintenance.Repair"
+        "Operations.Upkeep" or "Operations.FacilityUpkeep" or "Operations.Wages" or "Maintenance.Repair" or "Maintenance.Cleaning"
             or "Event.Preparation" when amountMinor <= 0 => FinancialFlowKind.OperatingExpense,
         _ => FinancialFlowKind.Other
     };
@@ -37,7 +37,7 @@ public static class FinanceClassification
     internal static bool IsBusinessPosting(string category) => category is "Condo.Buyback" or "Sales.Condo"
         or "Lease.Office" or "Lease.Home" or "Sales.Food" or "Sales.Shop" or "Sales.Hotel" or "Sales.Cinema"
         or "Sales.Event" or "Parking.Departure" or "Advertising.Contract" or "Operations.Upkeep"
-        or "Operations.FacilityUpkeep" or "Operations.Wages" or "Maintenance.Repair" or "Event.Preparation";
+        or "Operations.FacilityUpkeep" or "Operations.Wages" or "Maintenance.Repair" or "Maintenance.Cleaning" or "Event.Preparation";
 }
 
 public sealed partial class GameSession
@@ -80,8 +80,8 @@ public sealed partial class GameSession
         {
             var rule = Rules.For(room.DefinitionId); var op = OperationFor(room.Id);
             if (rule == null || op == null) continue;
-            if (rule.Model == "Home" && op.ContractActive && op.LastRentDay != day + 1 && Ready(room, op, rule, false))
-                obligations.Add(new BillingObligation(room.Id, op.PriceMinor, "Lease.Home", $"Day {day}: residential lease due at midnight."));
+            if (rule.Model == "Home" && HomeRentObligation(room.Id, day) is { } rent)
+                obligations.Add(rent);
             if (rule.Model == "Advertising" && Ready(room, op, rule, false) && PeakPopulation >= 4)
                 obligations.Add(new BillingObligation(room.Id, op.PriceMinor, "Advertising.Contract", $"Day {day}: billboard contract with occupied tower audience."));
         }

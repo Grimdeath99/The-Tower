@@ -52,7 +52,11 @@ internal static class Program
             ("Live person and bank inspection preserves state and shows physical movement", InspectPhysicalPerson),
             ("Inspection distinguishes arrival duration, visit deadline, and exit destination", InspectPersonSchedule),
             ("Elevator inspection shows transfer stops rather than final destinations", InspectTransferBank),
-            ("Service inspection distinguishes assigned target, working deadline, and return depot", InspectServicePerson)
+            ("Service inspection distinguishes assigned target, working deadline, and return depot", InspectServicePerson),
+            .. new ManagementPersistenceCases(_catalog, _rules, _locations).Cases(),
+            .. new OwnershipPersistenceCases(_catalog, _rules, _locations).Cases(),
+            .. new RetailPersistenceCases(_catalog, _rules, _locations).Cases(),
+            .. new TransportPersistenceCases(_catalog, _rules, _locations).Cases()
         ];
         var failures = 0;
         foreach (var (name, test) in cases)
@@ -568,7 +572,7 @@ internal static class Program
         {
             var inspection = game.InspectPerson(personId)!;
             var journey = game.Transport.JourneyFor(personId)!;
-            Equal(journey, inspection.Journey);
+            Equal(System.Text.Json.JsonSerializer.Serialize(journey), System.Text.Json.JsonSerializer.Serialize(inspection.Journey));
             Equal(game.People.Single(person => person.Id == personId), inspection.Person);
             Equal(600, inspection.PatienceTicks);
             Equal(game.Tick - journey.WaitSinceTick, inspection.CurrentWaitTicks);
@@ -588,8 +592,8 @@ internal static class Program
         Equal(4, riding.Journey.NextStopFloor!.Value);
         Equal(0L, riding.CurrentWaitTicks);
         Equal(0L, riding.Journey.WaitSinceTick);
-        Require(riding.LocationLabel.StartsWith("Elevator #1, floor "));
-        Equal(riding, ReadSession(game.Serialize()).InspectPerson(personId)!);
+        Require(riding.LocationLabel.StartsWith("Bank #1, car #1, floor "));
+        Equal(System.Text.Json.JsonSerializer.Serialize(riding), System.Text.Json.JsonSerializer.Serialize(ReadSession(game.Serialize()).InspectPerson(personId)!));
     }
 
     private static void InspectPersonSchedule()
@@ -659,12 +663,12 @@ internal static class Program
         var depotName = _catalog.Get("service-room").Name;
         Require(returning.DestinationLabel.StartsWith($"Return to {depotName} #{depot.EntityId}"));
         Equal(0, returning.Journey.DestinationFloor);
-        Equal(office, returning.Person.ServiceTargetId!.Value);
+        Require(returning.Person.ServiceTargetId is null, "A returning worker must release the serviced room.");
         Require(returning.NextActionTick is null);
         var before = game.Serialize();
         for (var read = 0; read < 50; read++) _ = game.InspectPerson(personId);
         Equal(before, game.Serialize());
-        Equal(returning, ReadSession(before).InspectPerson(personId)!);
+        Equal(System.Text.Json.JsonSerializer.Serialize(returning), System.Text.Json.JsonSerializer.Serialize(ReadSession(before).InspectPerson(personId)!));
     }
 
     private static void WithStorage(Action<string> test)
